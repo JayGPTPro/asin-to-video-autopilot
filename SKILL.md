@@ -49,9 +49,12 @@ Stage-by-stage detail lives in `references/` (see the map below). The shape:
 2. **Taste decisions** — apply `references/taste.md`: emotion/features center of
    gravity, mood band with a target luminance range, the signature camera move, cast
    diversity plan, the final image. Log every decision + its reason for the report.
-3. **Brief + shot plan** — the 7-beat listing template: hook, hero (signature shot),
-   4 distinct use beats, mood, close that rhymes with the hook. End states on every
-   fragile beat.
+3. **Brief + shot plan** — the 7-beat listing template, **summing to 30 seconds**:
+   hook 4s, hero 6s (the signature shot), four distinct use beats at 4s, close 4s.
+   30 is the model's ceiling and the beats must USE it: an earlier template stopped at
+   27s because it reserved 3s for a post-production CTA card this skill does not make,
+   which quietly threw away three seconds of paid runtime. A close that rhymes with the
+   hook, and end states on every fragile beat.
 4. **Compose + lint** — `scripts/compose.py` + `scripts/lint.py`. The lint gate is
    hard: density, slow words, end states, reference roles with USE/DO-NOT-USE,
    design silence, character budget. Never hand-write the master prompt.

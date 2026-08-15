@@ -1,12 +1,12 @@
 {
   "prompt_chars": 7436,
   "beat_chars": 4958,
-  "density_chars_per_sec": 183.6,
-  "duration_seconds": 27,
+  "density_chars_per_sec": 165.3,
+  "duration_seconds": 30,
   "over_soft": true,
   "over_hard": false,
   "settings": {
-    "seedanceDuration": 27,
+    "seedanceDuration": 30,
     "seedanceResolution": "720p",
     "aspect_ratio": "16:9",
     "seedanceGenerateAudio": true,
