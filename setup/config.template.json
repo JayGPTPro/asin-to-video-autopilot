@@ -1,0 +1,10 @@
+{
+  "cost_cap_usd": 20,
+  "duration_seconds": 30,
+  "aspect_ratio": "16:9",
+  "resolution": "720p",
+  "voiceover_language": "natural American English",
+  "brand_name": "",
+  "logo_path": "",
+  "output_dir": "./videos"
+}

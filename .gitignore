@@ -1,0 +1,10 @@
+# Buyer's own config and outputs never belong in the repo
+config.json
+videos/
+runs/
+*.mp4
+*.mp3
+*.m4a
+*.wav
+__pycache__/
+.DS_Store

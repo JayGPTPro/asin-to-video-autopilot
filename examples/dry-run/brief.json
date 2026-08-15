@@ -1,0 +1,45 @@
+{
+  "asin": "B0EXAMPLE1",
+  "product_name": "the Fireline Luma solar camping lantern",
+  "product_noun": "lantern",
+  "brand": "Fireline",
+  "angle": "One afternoon of sun runs the whole night.",
+  "register": "desire",
+  "emotion_weight": 70,
+  "mood": {
+    "band": "WARM_LAMPLIT",
+    "lum_range": [55, 90],
+    "reason": "evening campsite ritual; the product IS the warm light source"
+  },
+  "global_look": "One campsite at dusk on a pine lake; every pool of light in frame comes from the lantern itself, warm amber on skin and canvas against deep blue",
+  "signature_shot": {
+    "beat": "hero",
+    "move": "the lens travels through the lantern's glass into the LED core as it ignites",
+    "reason": "container-with-an-inside category; the interior reveal is the wow the gallery cannot show"
+  },
+  "final_image": "the lantern glowing alone on the table, tents lit behind it, the lake black and calm",
+  "cast": [
+    {"role": "the father", "age_display": "38", "gender": "man", "wardrobe": "a rust-orange fleece over a gray tee", "look_notes": "short dark beard"},
+    {"role": "the daughter", "age_display": "9", "gender": "girl", "wardrobe": "a navy hooded sweatshirt with sleeves pushed up", "look_notes": "curly hair"},
+    {"role": "the hiker", "age_display": "29", "gender": "woman", "wardrobe": "a green down vest over a long-sleeve base layer", "look_notes": "hair in a loose braid"}
+  ],
+  "references": [
+    {"kind": "product", "role": "front view of the same single lantern: matte forest-green shell, clear ribbed glass, matte-black fold-flat handle. Do not use the white studio backdrop", "serves": []},
+    {"kind": "product", "role": "top view of the same single lantern showing the round solar panel and the rubber charge-port cover. Do not use the props beside it", "serves": []},
+    {"kind": "product", "role": "detail view of the same single lantern's dimmer dial and hanging hook. Do not use the hand in the image", "serves": []},
+    {"kind": "style", "role": "the target dusk warmth: amber practical light against deep blue sky. Do not use the location, people or any objects from the image", "serves": ["hook", "close"]}
+  ],
+  "forbidden": [
+    "no other light source exists: no headlamp, phone light or campfire",
+    "no rain or bad weather",
+    "no brand text beyond what the referenced lantern carries"
+  ],
+  "audio": {
+    "music_direction": "",
+    "vo_tone": "warm, unhurried, natural American English",
+    "vo_script_for_post": "Sunset used to end the evening. Charge it in the afternoon sun, and the Luma runs eleven hours on a single charge. Dim it for the table. Hang it in the tent. One less thing to pack, one more hour together. Fireline Luma. The night is yours."
+  },
+  "duration_seconds": 30,
+  "aspect_ratio": "16:9",
+  "resolution": "720p"
+}

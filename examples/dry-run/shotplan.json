@@ -1,0 +1,84 @@
+{
+  "shots": [
+    {
+      "id": "S1",
+      "slot": "hook",
+      "seconds": 3,
+      "camera": {"size": "MEDIUM", "move": "fast push-in on a 35mm prime toward the table, real time, no slow motion"},
+      "action": "Dusk. The father reaches across the picnic table and clicks the lantern's dimmer dial one notch; amber light blooms across the table in a single breath, catching the steam off two enamel mugs, and the daughter's eyes go wide as she leans in over the table into the new pool of light. The blue evening behind them stays one stop darker than the table.",
+      "setting": "A pine-lake campsite at dusk, one tent behind the table, the sky deep blue",
+      "must_read": ["the lantern's ribbed glass and dimmer dial"],
+      "ambience": "one soft click, a small gas-stove hiss, crickets starting",
+      "people": {"present": true, "face_visible": true}
+    },
+    {
+      "id": "S2",
+      "slot": "hero",
+      "seconds": 5,
+      "camera": {"size": "MACRO", "move": "the lens flies toward the glass and passes THROUGH it into the lantern's interior; inside, the frame orbits the LED core once, then reverses back out to a medium shot, one continuous move"},
+      "action": "The lens travels through the ribbed glass into the lantern's interior: the LED core ignites element by element in real time, a ring of warm filaments lighting in sequence like a struck match settling into a steady flame, micro-dust sparking gold in the beam. The orbit completes and the lens pulls back out through the glass as the full lamp reaches brightness, throwing the table's shadows outward in one clean sweep.",
+      "end_state": "the lantern stands lit in the center of the table, dial at half, handle folded flat",
+      "setting": "Same table, same dusk, the amber now the dominant light on every face and surface",
+      "must_read": ["the ribbed glass texture", "the matte forest-green shell"],
+      "ambience": "a low warm electrical hum rising with the light, crickets underneath",
+      "people": {"present": false}
+    },
+    {
+      "id": "S3",
+      "slot": "use1",
+      "seconds": 4,
+      "camera": {"size": "CLOSE", "move": "static shot on an 85mm prime, real time"},
+      "action": "Afternoon flashback, hard sun: the hiker sets the lantern panel-up on a boulder, flips the solar panel toward the sun with one thumb, and a small charge lamp beside the port blinks on. She checks it once over her shoulder while cinching her pack, grins, and walks out of frame; the lantern stays, drinking the sun, its shadow crisp on the rock.",
+      "setting": "A sunlit trailside boulder above the same lake, midafternoon glare",
+      "must_read": ["the round solar panel"],
+      "ambience": "wind over rock, a pack buckle snapping shut",
+      "people": {"present": true, "face_visible": true}
+    },
+    {
+      "id": "S4",
+      "slot": "use2",
+      "seconds": 4,
+      "camera": {"size": "MEDIUM", "move": "handoff tracking on a 50mm: the camera follows the lantern from the father's hand up to the tent hook, starting at the table and ending inside the tent"},
+      "action": "Night now. The father lifts the lantern by its fold-flat handle, carries it three steps, and hangs it on the tent's ceiling loop in one motion; the tent walls turn from black to glowing amber around the daughter, who looks up from her sleeping bag with her mouth open mid-laugh and pulls her book into the new light. The hook clicks home and the lantern swings once and settles.",
+      "end_state": "the lantern hangs centered in the tent, still, the daughter reading beneath it",
+      "setting": "Inside the family tent at night, walls glowing warm from the single source",
+      "must_read": ["the hanging hook"],
+      "ambience": "canvas rustle, one metallic click, a child's short laugh",
+      "people": {"present": true, "face_visible": true}
+    },
+    {
+      "id": "S5",
+      "slot": "use3",
+      "seconds": 4,
+      "camera": {"size": "CLOSE-UP", "move": "rack focus on a 100mm macro: shift focus from the dial in the foreground to the hiker's face behind it; the dial blurs as her face sharpens"},
+      "action": "The hiker's thumb rolls the dimmer dial down two notches in real time and the light steps down with it, notch by notch, from full camp-bright to a low reading glow; each step lands as a distinct level, no flicker. Her face softens as the glare leaves it, her eyes settle onto the mug in her hands, and steam curls up through the lowered beam.",
+      "setting": "Her solo camp: a one-person tent, a foam pad, the lantern on a flat stone",
+      "must_read": ["the dimmer dial"],
+      "ambience": "the dial's fine ratchet ticks, a night bird far off",
+      "people": {"present": true, "face_visible": true}
+    },
+    {
+      "id": "S6",
+      "slot": "use4",
+      "seconds": 4,
+      "camera": {"size": "WIDE", "move": "one crane rise on a 24mm, starting at table height and ending high enough to hold both tents and the lake, real time"},
+      "action": "The camera rises from the lit table past the father stacking mugs and the daughter waving a moth off the glass, until the campsite reads as two amber islands, table and tent, on the black shore; the lantern holds steady through the rise and the lake carries one unbroken amber reflection.",
+      "setting": "The campsite from above at true night",
+      "must_read": [],
+      "ambience": "water against the shore, dishes stacking, crickets in full",
+      "people": {"present": true, "face_visible": false}
+    },
+    {
+      "id": "S7",
+      "slot": "close",
+      "seconds": 3,
+      "camera": {"size": "MEDIUM", "move": "slow pull-back mirroring the hook's push-in, the one held beat of the film, gentle slow motion allowed"},
+      "action": "The reverse of the opening: the camera eases back from the lantern alone on the cleared table, its glow the only light, the two tents lit warm behind it and the lake holding its reflection. The father's hand enters, clicks the dial one notch down to a night-light glow, and leaves frame; the lantern keeps its low amber steady as the frame settles.",
+      "end_state": "the lantern glowing alone on the table, tents lit behind it, the lake black and calm",
+      "setting": "The cleared picnic table at full night",
+      "must_read": ["the lantern's silhouette and glass glow"],
+      "ambience": "one final soft click, crickets, water settling",
+      "people": {"present": true, "face_visible": false}
+    }
+  ]
+}
