@@ -66,5 +66,5 @@ Amazon listing videos: 1280x720 (16:9), 27-30 seconds, English voiceover.
 
 ---
 
-© Jay GPT Pro. All rights reserved. Licensed for use by the purchaser;
-not for redistribution or resale.
+© Jay GPT Pro. All rights reserved. Shared with invited members for their own
+use; not for redistribution or resale.
