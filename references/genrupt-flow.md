@@ -93,18 +93,17 @@ beat, grooves through the four use beats, resolves warm on the close"). Write th
 curve INTO the promptRequest with rough second marks. A bed that ignores the film is
 wallpaper; wallpaper is what failed.
 
-**5a-bis. AUDIO IS UNPRICEABLE AND EXPENSIVE. Budget it before you fire it.**
+**5a-bis. Audio is UNPRICED but CHEAP — count it, do not fear it.**
 `get_credit_balance_and_costs` has no operation key for audio (verified), so
-`generate_project_audio` gives no preview. Measured: four tracks in one run came to
-USD 18.42 — more than the master render, and enough to blow a USD 15 cap by 80%.
-Rules: ONE music + ONE voiceover by default; reserve `2 x audio_track_usd` from the
-cap before generating; if it does not fit, skip audio and ship the diegetic cut with
-a note. Alternates for the taste gate are free re-mixes of the same two tracks.
+`generate_project_audio` returns no preview. Measured on a clean single-session run:
+**~3 credits per track, about USD 0.20.** So generating 2-3 music candidates costs
+well under a dollar and the quality gain is worth it. What you must NOT do is infer
+the price from a balance delta: one run did that with other sessions active and
+reported a USD 27.06 spend on a run that truly cost about USD 9.36. Count the tracks
+you fire, multiply by `audio_track_usd`, add it to the running total.
 
-**5b. Pick between MIXES, not between generations.** One generation each; the choice happens in
-the mix (music forward, music off, voice shifted), which costs nothing. If a second
-music generation is genuinely needed, it must fit the reserved audio budget. For the
-track you have: extract the RMS envelope
+**5b. Generate 2-3 music candidates and PICK against the cut.** At ~USD 0.20 each this
+is the cheapest quality decision in the run. For each candidate: extract the RMS envelope
 (`ffmpeg -af astats` per second, or numpy on the decoded wave) and score how its
 swells align with the film's cut points and its quietest bar with the hero freeze.
 Pick the best-aligned; note the scores in the report. Never ship the only candidate

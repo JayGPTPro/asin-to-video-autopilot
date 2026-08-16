@@ -1,7 +1,7 @@
 {
   "cost_cap_usd": 20,
-  "audio_track_usd": 5.0,
-  "_audio_track_usd_note": "Genrupt cannot price audio in advance. This is the assumed worst case per track; measure it once on a quiet account and replace it.",
+  "audio_track_usd": 0.2,
+  "_audio_track_usd_note": "Genrupt returns no price preview for audio. Measured ~3 credits (~USD 0.20) per track on a clean single-session run. Count tracks and add them to the running total by hand.",
   "duration_seconds": 30,
   "aspect_ratio": "16:9",
   "resolution": "720p",

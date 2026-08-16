@@ -39,27 +39,30 @@ config exists, a run never stops to ask anything unless it would cross the cost 
   headroom for at most ONE autonomous fix. A second failure is written to the report
   with recommendations; it never spends more.
 
-### Audio is the one action the API cannot price. Treat it as the cap's main threat.
+### How to count what you spent (the trap that fakes an overrun)
 
-Measured failure: a run reported USD 27.06 against a USD 15 cap — an 80% overrun —
-because four audio tracks were fired on this file's old "~USD 1-3" guess.
-`get_credit_balance_and_costs` has **no operation key for audio** (verified), so
-`generate_project_audio` returns no cost preview. Therefore:
+**NEVER compute spend by subtracting credit balances.** Measured, and it produced a
+false alarm: one run reported USD 27.06 against a USD 15 cap and declared itself 80%
+over. Its project actually contained exactly two renders — a probe and a master — and
+the true spend was about USD 9.36. The phantom USD 17.70 was other sessions on the
+same account moving the balance inside that run's window. A user seeing that report
+would think the tool robbed them.
 
-1. **Default to ONE music track and ONE voiceover track.** Never 2+2. The alternates
-   the taste gate wants are FREE: different mixes of the SAME tracks (music forward /
-   music off / voice shifted), never new generations.
-2. **Assume `audio_track_usd` from config (default 5.00 per track) until measured.**
-   Budget `2 x audio_track_usd` before generating any audio; if that does not fit the
-   remaining headroom, skip audio, deliver the diegetic cut, and say so.
-3. **Measure it once, then stop guessing.** When no other session is touching the
-   account: read the balance, generate ONE track, read the balance again, and write
-   the real per-track price into `config.json` as `audio_track_usd`. Every later run
-   uses the measured number.
-4. **Balance deltas lie when sessions run in parallel** (measured: a concurrent run
-   moved 141 credits inside another run's window). Only trust a balance delta if you
-   confirm no other run is active; otherwise price from tool previews and the stored
-   constant.
+The rule:
+
+1. **Running total = the SUM OF COST PREVIEWS you were quoted**, one line per paid
+   action, plus audio at the constant below. Balance is a sanity check, never the
+   source of truth.
+2. **A balance delta is only evidence when you have confirmed nothing else is
+   running** on the account. Otherwise it is noise, in both directions: it can invent
+   spending you did not do, and it can hide a job that did not run.
+3. **Audio is cheap but unpriced.** `get_credit_balance_and_costs` has no operation
+   key for audio (verified), so `generate_project_audio` returns no preview. Measured
+   from a clean single-session run: **about 3 credits per track, roughly USD 0.20.**
+   Budget `audio_track_usd` from config per track, count the tracks you fire, and add
+   them to the running total by hand. Because it is this cheap, generating 2-3 music
+   candidates to pick the best one is the right call — the taste gate stays.
+4. A content-filter refusal on audio costs nothing, same as on video.
 
 ## Run stages
 
