@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1280, height=720" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link rel="stylesheet" href="fonts.css" />
+    <script src="lib.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1280px; height: 720px; overflow: hidden; background: #000; }
+
+      /* ===== THEME BLOCK — filled from the run's theme.json. One source of
+         truth: every color, font and size below comes from that file. A super
+         that hardcodes its own values is the bug this template exists to
+         prevent. =====
+         body font-family  <- theme.font.family
+         .ink-light        <- theme.ink_light
+         .ink-dark         <- theme.ink_dark  (from the label palette)
+         accent background <- theme.accent    (from the label palette)      */
+      body { font-family: "THEME_FONT", sans-serif; }
+      #root { perspective: 900px; }
+      .super { position: absolute; opacity: 0; }
+      .ink-light { color: #F5EFE3; text-shadow: 0 2px 16px rgba(20,16,10,.65); }
+      .ink-dark  { color: #24352B; text-shadow: 0 1px 8px rgba(245,239,227,.35); }
+      .hero   { font-size: 132px; font-weight: 200; line-height: 1.02; }
+      .line   { font-size: 40px;  font-weight: 300; }
+      .kicker { font-size: 30px;  font-weight: 300; }
+      .g, .w { display: inline-block; }
+      .rule { height: 4px; background: #C9A227; }
+      .dot  { display: inline-block; width: 9px; height: 9px; border-radius: 50%;
+              background: #C9A227; margin: 0 14px; vertical-align: middle; }
+      .slab { position: absolute; background: #C9A227; z-index: -1; }
+      /* scrim: added ONLY when overlay_qa.py demands it for a busy zone */
+      .scrim { position: absolute; background:
+               linear-gradient(180deg, rgba(12,10,8,.55), rgba(12,10,8,0));
+               pointer-events: none; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="30"
+         data-width="1280" data-height="720">
+
+      <video id="film" class="clip" data-clip data-track-index="0"
+             data-start="0" data-duration="30" src="assets/film.mp4" muted
+             style="position:absolute; inset:0; width:1280px; height:720px; object-fit:cover;"></video>
+
+      <!-- SUPERS GO HERE. The contract for each one:
+           - class="super clip" + ink class chosen by measured zone luminance
+           - data-start / data-duration from MEASURED VO word timestamps
+           - a unique data-track-index
+           - text split into span.w words (or splitGlyphs() for per-letter)
+           Example:
+      <div class="super ink-light kicker clip" id="s1" data-clip
+           data-track-index="1" data-start="4.70" data-duration="2.40"
+           style="left:56px; top:64px; letter-spacing:8px;">
+        <span class="w">COLD-PRESSED</span><span class="dot w"></span><span class="w">USDA ORGANIC</span>
+      </div>
+      -->
+    </div>
+
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      window.__timelines = { main: tl };
+
+      // Choreograph with lib.js builds only — entrance, hold, exit per super,
+      // using the theme's mapped entrances. Times are film seconds. Example:
+      // wordRise(tl, "#s1", 4.70);
+      // drift(tl, "#s1", 5.40);
+      // quietFade(tl, "#s1", 6.70);
+    </script>
+  </body>
+</html>

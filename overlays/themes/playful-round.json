@@ -1,0 +1,16 @@
+{
+  "name": "playful-round",
+  "when": "Kids, pets, party, novelty — products bought with a smile. Rounded forms and bouncy settles; energy without aggression.",
+  "font": { "family": "Baloo 2", "hero_weight": 800, "line_weight": 600, "kicker_weight": 600 },
+  "case": "upper",
+  "sizes_px": { "hero": 120, "line": 42, "kicker": 28 },
+  "tracking_px": { "hero": 2, "line": 3, "kicker": 5 },
+  "ink_light": "#FFF9F0",
+  "ink_dark": "FROM_LABEL",
+  "accent": "FROM_LABEL",
+  "accent_jobs": ["rounded pill behind the kicker", "dot separator (larger, 12px)"],
+  "entrances": ["wordPop", "bounceRise"],
+  "hold": "gentleSway",
+  "exit": "popOut",
+  "notes": "back.out everywhere, ~0.09s word stagger. The pill uses the accent at 0.9 alpha with the ink reversed. Never use this theme to be cute about a serious product."
+}

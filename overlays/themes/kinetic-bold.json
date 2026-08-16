@@ -1,0 +1,16 @@
+{
+  "name": "kinetic-bold",
+  "when": "Tools, gadgets, sports, automotive, gaming — products whose category argument is power, speed or toughness. Loud is correct here; thin would read weak.",
+  "font": { "family": "Archivo Black", "hero_weight": 400, "line_weight": 400, "kicker_weight": 400 },
+  "case": "upper",
+  "sizes_px": { "hero": 150, "line": 48, "kicker": 26 },
+  "tracking_px": { "hero": 2, "line": 3, "kicker": 6 },
+  "ink_light": "#F2F2EF",
+  "ink_dark": "FROM_LABEL",
+  "accent": "FROM_LABEL",
+  "accent_jobs": ["slab behind ONE word (lands with the ram)", "underline that snaps in from the entering side"],
+  "entrances": ["ramIn", "wordPop"],
+  "hold": "microShake",
+  "exit": "directionalSlide",
+  "notes": "The Z-push ram-in with the scaleX snap is the signature. Numbers use counterRoll. Never more than one slab per beat."
+}
