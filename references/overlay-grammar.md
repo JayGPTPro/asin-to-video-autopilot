@@ -31,6 +31,12 @@ architecture makes structurally impossible.
 5. **QA the layer**: `scripts/overlay_qa.py <index.html> <film.mp4> <theme.json>
    [words.json]` — theme lock, worst-frame contrast, busy-zone scrim demand,
    reading time, size floor, VO sync, breath gaps. FAIL blocks the render.
+6. **The box-sheet eye pass is MANDATORY.** overlay_qa writes
+   `qa/overlay-boxes/` — sampled frames with every super's box drawn on them.
+   LOOK at every frame before compositing: a box on a face, the product, a
+   label or hands is an automatic reposition, whatever the numbers said.
+   Measured: a super passed every numeric check while sitting straight on a
+   person's head. Numbers cannot see a face; the eye pass can.
 
 ## The two laws (unchanged, they predate the themes)
 

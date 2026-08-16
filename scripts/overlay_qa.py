@@ -9,6 +9,13 @@ words.json = whisper word timestamps: [{"word": "roots", "start": 8.31, ...}].
 A super that should track speech carries data-vo="the spoken phrase" in its
 HTML; sync is checked against the measured time of that phrase.
 
+Also WRITES qa/overlay-boxes/: sampled frames with each super's box drawn on
+them. The run MUST look at this sheet before compositing — a box sitting on a
+face, the product, a label or hands is an automatic reposition, whatever the
+contrast numbers say. (Measured failure: a hand-placed test super sat straight
+on a woman's head while passing every numeric check. Numbers cannot see a face;
+the eye pass on the box sheet is the check that can.)
+
 Checks (each measured, each prints PASS/FAIL):
  1. THEME LOCK — every hex color in the HTML belongs to the theme (accent,
     inks, scrim neutrals); every font-family is the theme family. Drift fails.
@@ -118,6 +125,31 @@ def sample_zone(film, t0, t1, box):
     return out
 
 
+def draw_box_sheet(film, sups, class_px, out_dir):
+    """3 frames per super (start/mid/end) with the super's box drawn in red.
+    This sheet is for EYES: the agent must confirm no box covers a face, the
+    product, a label or hands."""
+    from PIL import ImageDraw
+    os.makedirs(out_dir, exist_ok=True)
+    n = 0
+    for s in sups:
+        x0, y0, x1, y1, _ = box_estimate(s, class_px)
+        for tag, t in (("a", s["start"] + 0.1),
+                       ("b", s["start"] + s["dur"] / 2),
+                       ("c", s["start"] + s["dur"] - 0.1)):
+            fp = os.path.join(out_dir, f"{s['id']}-{tag}.jpg")
+            subprocess.run(["ffmpeg", "-y", "-ss", f"{t:.2f}", "-i", film,
+                            "-frames:v", "1", "-loglevel", "error", fp], check=True)
+            im = Image.open(fp)
+            d = ImageDraw.Draw(im)
+            d.rectangle([x0, y0, x1, y1], outline=(255, 40, 40), width=4)
+            d.text((x0 + 6, max(2, y0 - 18)), f"{s['id']} @{t:.1f}s", fill=(255, 40, 40))
+            im.save(fp)
+            n += 1
+    print(f"box sheet: {n} frames in {out_dir} — LOOK at them: no box on a "
+          f"face, the product, a label or hands.")
+
+
 def main():
     html_path, film, theme_path = sys.argv[1], sys.argv[2], sys.argv[3]
     words = json.load(open(sys.argv[4]))["words"] if len(sys.argv) > 4 else None
@@ -146,6 +178,10 @@ def main():
 
     ink_l = {"light": rel_lum(theme.get("ink_light", "#F5EFE3")),
              "dark": rel_lum(theme.get("ink_dark", "#24352B"))}
+
+    draw_box_sheet(film, sups, class_px,
+                   os.path.join(os.path.dirname(os.path.abspath(html_path)),
+                                "..", "qa", "overlay-boxes"))
 
     for s in sups:
         x0, y0, x1, y1, fs = box_estimate(s, class_px)

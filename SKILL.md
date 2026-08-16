@@ -124,7 +124,9 @@ Stage-by-stage detail lives in `references/` (see the map below). The shape:
     build from `overlays/template.html` + the `lib.js` choreography library with
     EMBEDDED fonts, and QA the layer with `scripts/overlay_qa.py` (theme lock,
     worst-frame contrast, reading time, VO sync from measured word timestamps,
-    breath gaps) — FAIL blocks the composite. Render the 6s style card for the
+    breath gaps) — FAIL blocks the composite. Then LOOK at the
+    `qa/overlay-boxes/` sheet it writes: a box on a face, the product, a label
+    or hands is an automatic reposition; numbers cannot see a face. Render the 6s style card for the
     report before compositing the full film. **Brand marks: real or absent**
     (taste.md §4b).
 12. **THE AUDIO TASTE GATE.** Audio is the one layer meters cannot judge: every
