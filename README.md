@@ -61,7 +61,7 @@ only if an action would cross the cap.
 
 ## Scope of version one
 
-Amazon listing videos: 1280x720 (16:9), 27-30 seconds, English voiceover.
+Amazon listing videos: 1280x720 (16:9), 30 seconds, English voiceover.
 9:16 social cuts, PPC and UGC formats come later.
 
 ---

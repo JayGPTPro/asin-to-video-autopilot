@@ -32,12 +32,34 @@ config exists, a run never stops to ask anything unless it would cross the cost 
 
 - Total spend per run is bounded by `cost_cap_usd` in config.json.
 - Report every paid action in one line as it happens: what, cost, running total.
-- A typical run: probe ~USD 0.55, master 30s/720p ~USD 8-9, post audio ~USD 1-3.
-  The headroom inside the cap funds at most ONE autonomous fix (retake or surgical
-  edit) if QA fails hard. A second failure is written to the report with
-  recommendations; it never spends more.
-- If the next action would cross the cap: stop, state exactly what is left undone
-  and what it would cost, and wait. This is the only mid-run stop that exists.
+- **BEFORE every paid action, check headroom against its WORST CASE cost, not its
+  hoped-for cost.** If `running_total + worst_case > cap`, stop and ask. This is the
+  only mid-run stop that exists.
+- Typical run: probe ~USD 0.55, master 30s ~USD 8-9, audio (see below), leaving
+  headroom for at most ONE autonomous fix. A second failure is written to the report
+  with recommendations; it never spends more.
+
+### Audio is the one action the API cannot price. Treat it as the cap's main threat.
+
+Measured failure: a run reported USD 27.06 against a USD 15 cap — an 80% overrun —
+because four audio tracks were fired on this file's old "~USD 1-3" guess.
+`get_credit_balance_and_costs` has **no operation key for audio** (verified), so
+`generate_project_audio` returns no cost preview. Therefore:
+
+1. **Default to ONE music track and ONE voiceover track.** Never 2+2. The alternates
+   the taste gate wants are FREE: different mixes of the SAME tracks (music forward /
+   music off / voice shifted), never new generations.
+2. **Assume `audio_track_usd` from config (default 5.00 per track) until measured.**
+   Budget `2 x audio_track_usd` before generating any audio; if that does not fit the
+   remaining headroom, skip audio, deliver the diegetic cut, and say so.
+3. **Measure it once, then stop guessing.** When no other session is touching the
+   account: read the balance, generate ONE track, read the balance again, and write
+   the real per-track price into `config.json` as `audio_track_usd`. Every later run
+   uses the measured number.
+4. **Balance deltas lie when sessions run in parallel** (measured: a concurrent run
+   moved 141 credits inside another run's window). Only trust a balance delta if you
+   confirm no other run is active; otherwise price from tool previews and the stored
+   constant.
 
 ## Run stages
 
@@ -62,7 +84,11 @@ Stage-by-stage detail lives in `references/` (see the map below). The shape:
    marketing text, pad to legal aspect ratio BEFORE upload (a failed download bills;
    a filter refusal is free).
 6. **Probe** — 4s/480p of the signature shot with real references. QA the probe:
-   product fidelity, luminance vs the declared mood band.
+   product fidelity, luminance vs the declared mood band. **Every probe finding must
+   become a change in the master prompt before the master runs, not a note.** Measured:
+   a probe predicted the product losing its surface texture in close foreground, the
+   master ran unchanged, and the finished film lost it exactly there. A film-wide
+   guard does not protect one beat: write the fix INTO the beat that showed it.
 7. **Master** — 30s/720p via `generate_video`, diegetic sound only (no music, no
    voiceover in the generated pass).
 8. **QA** — `scripts/qa.py`: true beat lengths, end-state audit per beat (grabs
@@ -71,8 +97,18 @@ Stage-by-stage detail lives in `references/` (see the map below). The shape:
    frozen-fraction cap, and the relative signature check: the wow shot must not be
    the film's sleepiest shot. Plus the eye pass: glitter artifacts on hair and
    fabric, invented props, label fidelity.
-9. **Autonomous fix** — if a hard failure and the cap allows: one retake (systemic)
-   or one surgical edit (local). Attribution first: fix the owning layer.
+9. **Autonomous fix — by SEVERITY CLASS, not by count.** Measured failure: a run
+   spent its single fix on a dark hero and shipped with a SECOND product visible in
+   frame and a third-party branded can beside it. Three classes are NEVER shippable
+   and outrank everything, in this order:
+   1. **A second copy of the product, or a competitor/third-party brand, in frame.**
+      A seller cannot use that video at all.
+   2. **Generated text or a fake logo in frame.**
+   3. **A beat that is unwatchable** (near-black, frozen, or the wow shot dead).
+   Try the FREE repairs first and they often suffice: trim the offending seconds at
+   scene-detect boundaries, reframe with a crop, or cover the corner with an overlay.
+   Only then spend. Whatever is left unfixed goes in the report by class, so the
+   person knows what they are looking at.
 10. **Post audio** — derived, auditioned, measured (`references/genrupt-flow.md`
     §5a-5e). The music brief is DERIVED from the film's register, cut rhythm and
     energy curve; 2-3 candidates are generated and PICKED by envelope-vs-cuts

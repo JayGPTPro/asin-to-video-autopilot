@@ -1,5 +1,7 @@
 {
   "cost_cap_usd": 20,
+  "audio_track_usd": 5.0,
+  "_audio_track_usd_note": "Genrupt cannot price audio in advance. This is the assumed worst case per track; measure it once on a quiet account and replace it.",
   "duration_seconds": 30,
   "aspect_ratio": "16:9",
   "resolution": "720p",

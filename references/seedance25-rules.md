@@ -27,6 +27,11 @@ rules are expressed by how you fill the brief and shot plan fields.
 - On VIDEO references the ignore clause is MANDATORY, naming identity, scene and
   incidental detail: "Do not use the person's identity, clothing, or scene from the
   video". A reference donates the objects inside it.
+- **A "do not use X" clause alone leaks. Say what IS there instead.** Measured: a
+  reference's swimming pool appeared despite an explicit do-not-use-the-pool clause,
+  because nothing positive occupied that slot. Pair every exclusion that matters with
+  the positive fact in the BEAT: "on a shallow steel water tray on a wooden deck; no
+  pool exists in this world".
 - **Multiple product images declare one object** (official multi-view rule): each
   role reads "front view of the same single <noun>", "underside of the same single
   <noun>". The composer adds the categorical uniqueness line ("no other <noun>

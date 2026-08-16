@@ -45,7 +45,7 @@ Each use beat carries ONE dominant message, a different situation, and a differe
 proof shape (in-action / result / contrast / context). No two adjacent beats argue
 the same way. A skipped selling point is fine; an unfocused beat is not.
 
-## 4b. Brand marks: real or absent, never typeset (Jay, hard rule, 14.8)
+## 4b. Brand marks: real or absent, never typeset
 
 NEVER set a brand name in a font and present it as the brand. A typeset wordmark is a
 fake logo. The options, in order:
@@ -54,9 +54,9 @@ fake logo. The options, in order:
    overlay resolution, use it.
 2. **No logo at all.** The product's own label IS the brand mark and it is already in
    frame; an endframe of the product with its label readable needs nothing else.
-Plain descriptive text ("Organic Rosemary Oil", a CTA) is fine — it must not be styled
-as a logo lockup. Measured failure: an Inter-set "ELLA & EDEN" endframe read as a fake
-brand and failed review.
+Plain descriptive text (the product category, a CTA) is fine — it must not be styled
+as a logo lockup. Measured failure: a brand name set in a generic font on the endframe
+read as a fake logo and failed review.
 
 ## 5. The signature shot: one impossible camera move per film
 
@@ -77,7 +77,7 @@ And probe it first — the most ambitious shot is the most likely to render as m
 and the probe of exactly that shot is the cheapest insurance in the run.
 
 **THE MOTION FLOOR (measured failure, 14.8: a 5s bullet-time beat rendered near-static
-and Jay called it "barely moves").** A freeze buys stillness ONLY if the camera sprints:
+and review called it "barely moves").** A freeze buys stillness ONLY if the camera sprints:
 - The frozen hold is capped at ~1.5-2 seconds of the beat, never the whole beat.
 - The camera's speed is written in TIME: "the camera sweeps the half orbit in about
   one second", not "orbits the drop".
@@ -87,7 +87,17 @@ and Jay called it "barely moves").** A freeze buys stillness ONLY if the camera 
 - QA verifies this with the per-beat motion metric (qa.py): a signature beat that
   measures near-static failed, whatever the prompt said.
 
-## 5b. Fantasy stays physical: no glitter, ever (Jay, 14.8)
+## 5a-bis. A move that goes INSIDE an object must light the inside
+
+Measured twice: a lens travelling through a fan hub produced 0.9s of near-black that
+"reads as a black whip", and a move inside a sealed ball measured luminance 32.7
+against a 63-196 band. The interior of a real object is dark, and the model renders
+that honestly. So a through-the-object signature move must either name its interior
+light ("the LED ring ignites and lights the chamber as the lens arrives"), or keep the
+interior to under half a second and cut out on a bright frame. Never write a
+through-the-object move without deciding which of the two you are doing.
+
+## 5b. Fantasy stays physical: no glitter, ever
 
 Fantasy moments are welcome as PHYSICS (a freeze, an impossible lens path, scale).
 They are never PARTICLES. The model decorates hair, fabric and liquids with sparkles

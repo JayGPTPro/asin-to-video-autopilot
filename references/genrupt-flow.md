@@ -93,8 +93,18 @@ beat, grooves through the four use beats, resolves warm on the close"). Write th
 curve INTO the promptRequest with rough second marks. A bed that ignores the film is
 wallpaper; wallpaper is what failed.
 
-**5b. Generate 2-3 candidates and PICK against the cut.** `trackCount: 2-3` (each
-track bills — price it). For each candidate: extract the RMS envelope
+**5a-bis. AUDIO IS UNPRICEABLE AND EXPENSIVE. Budget it before you fire it.**
+`get_credit_balance_and_costs` has no operation key for audio (verified), so
+`generate_project_audio` gives no preview. Measured: four tracks in one run came to
+USD 18.42 — more than the master render, and enough to blow a USD 15 cap by 80%.
+Rules: ONE music + ONE voiceover by default; reserve `2 x audio_track_usd` from the
+cap before generating; if it does not fit, skip audio and ship the diegetic cut with
+a note. Alternates for the taste gate are free re-mixes of the same two tracks.
+
+**5b. Pick between MIXES, not between generations.** One generation each; the choice happens in
+the mix (music forward, music off, voice shifted), which costs nothing. If a second
+music generation is genuinely needed, it must fit the reserved audio budget. For the
+track you have: extract the RMS envelope
 (`ffmpeg -af astats` per second, or numpy on the decoded wave) and score how its
 swells align with the film's cut points and its quietest bar with the hero freeze.
 Pick the best-aligned; note the scores in the report. Never ship the only candidate
