@@ -25,8 +25,12 @@ config exists, a run never stops to ask anything unless it would cross the cost 
    working directory), copy `setup/config.template.json` to `config.json`, show the
    user the cost cap (default USD 20 per run) and ask ONCE if they want to change it.
    This is the only money question this product ever asks.
-3. Confirm the Genrupt MCP is connected: call `get_credit_balance_and_costs`. This
-   also fetches LIVE pricing — never use hardcoded prices; Genrupt pricing moves.
+3. Confirm the Genrupt MCP is connected: call `get_credit_balance_and_costs` for
+   the BALANCE. Do not price renders from its presets — they cannot quote
+   Seedance 2.5 (measured: silently resolved to fast-model keys and clamped to
+   15s). Plan from the measured constants in `references/genrupt-flow.md` §0;
+   the authoritative price of every render is the `costPreview` in its own
+   `generate_video` response, and that is the number you log.
 
 ## The money contract
 
@@ -56,12 +60,10 @@ The rule:
 2. **A balance delta is only evidence when you have confirmed nothing else is
    running** on the account. Otherwise it is noise, in both directions: it can invent
    spending you did not do, and it can hide a job that did not run.
-3. **Audio is cheap and now PRICEABLE.** Quote it live with the `presets` form:
-   `get_credit_balance_and_costs {presets: [{workflow: "audio_generation",
-   audioDurationSeconds: 30, trackCount: N}]}` — measured live: 2 credits
-   (~USD 0.12) per 30s track. (The old operation-key form has no audio key; the
-   presets form does.) Because it is this cheap, generating 2-3 music candidates
-   and 2 VO takes to pick the best is the right call — the taste gate stays.
+3. **Audio is cheap: ~2 credits (~USD 0.12) per 30s track** (measured live).
+   Count the tracks you fire and add them to the running total. Because it is
+   this cheap, generating 2-3 music candidates and 2 VO takes to pick the best
+   is the right call — the taste gate stays.
 4. A content-filter refusal on audio costs nothing, same as on video.
 
 ## Run stages
@@ -154,12 +156,20 @@ credit moves — this is a free fix at that stage and an unusable video after it
 ## Re-runs on the same ASIN: variant by default
 
 The render is stochastic but the taste engine is not — left alone, run 2 produces
-the SAME commercial as run 1 in a different take. So on every run, FIRST scan the
-runs folder for previous run-states on this ASIN. If any exist (and the user did
-not ask for a retake), this run is a VARIANT: choose differently on at least TWO
-axes where more than one defensible option exists, and write the divergence into
-the report ("Variant B — differs from run 1: signature move, mood band, hook").
-The axes, in preference order:
+the SAME commercial as run 1 in a different take. So on every run, FIRST check for
+previous runs on this ASIN in BOTH places:
+
+1. **The runs directory**: `runs/<ASIN>*` under the folder the skill runs in (or
+   under config `output_dir`). Scan for `run-state.json` files carrying this ASIN.
+2. **Genrupt's own record**: `get_project_scenes` on the ASIN's project. Measured:
+   a disk scan missed a parallel session's finished run because it looked in the
+   wrong folder — the provider's record is the one that cannot be missed, and an
+   `IDEMPOTENCY_CONFLICT` on your first render key means the same thing.
+
+If a previous run exists (and the user did not ask for a retake), this run is a
+VARIANT: choose differently on at least TWO axes where more than one defensible
+option exists, and write the divergence into the report ("Variant B — differs
+from run 1: signature move, mood band, hook"). The axes, in preference order:
 
 1. Signature camera move (the category table usually offers two).
 2. Mood band (bright-everyday vs warm-lamplit — never force moody-night).

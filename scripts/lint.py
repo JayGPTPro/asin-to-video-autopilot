@@ -19,6 +19,17 @@ SLOW_WORDS = re.compile(r"\b(slowly|slow|unhurried|leisurely|lingers?|drifts?)\b
 SPARKLE_BAIT = re.compile(r"\bcatch(?:es|ing)? the (?:\w+ ){0,2}(?:light|lamp|sun)\b|shimmer\w*|sparkl\w*|glitter\w*|dancing light", re.I)
 DESIGN = re.compile(r"#[0-9a-fA-F]{6}\b|\bfonts?\b|\btypefaces?\b|\bpantone\b|\bcolou?r palette\b", re.I)
 NUMBER_WORDS = r"(?:two|three|four|five|six|seven|eight|nine|ten|\d+)"
+# A group beat that implies SIMULTANEOUS handlers renders SEVERAL products
+# (measured: "the football snaps around it ... quick low passes" rendered two
+# footballs at once past an explicit uniqueness line and a no-second-ball line).
+DISTRIBUTION = re.compile(
+    r"\b(?:snaps?|passes?|pass|flies|fly|whips?|zips?|goes|moves?|bounces?)\s+"
+    r"(?:around|between|among|across the (?:circle|group))\b"
+    r"|\bto\s+(?:the\s+)?\w+\s+to\s+(?:the\s+)?\w+\b", re.I)
+PERSON_WORDS = re.compile(
+    r"\b(?:man|woman|boy|girl|kid|teen|friend|player|brother|sister|father|mother|"
+    r"guy|everyone|group|circle of|the four|the three)\b", re.I)
+SINGLE_OBJECT = re.compile(r"same single|one object|never two|hand to hand|one continuous path", re.I)
 
 
 def lint(run_dir):
@@ -43,8 +54,22 @@ def lint(run_dir):
     if band not in MOODS:
         errors.append(f"mood.band must be one of {list(MOODS)} with its luminance range — "
                       "an undeclared mood lets the model choose night")
-    elif band == "MOODY_NIGHT" and not (mood.get("reason") or "").strip():
-        errors.append("MOODY_NIGHT needs a written reason; it is never a default")
+    else:
+        if band == "MOODY_NIGHT" and not (mood.get("reason") or "").strip():
+            errors.append("MOODY_NIGHT needs a written reason; it is never a default")
+        # ONE source of truth for the band's numbers. Measured: a brief carried
+        # the range under a different key, QA silently fell back to WARM_LAMPLIT
+        # and reported a correct bright film as OUT OF BAND at lum 163.
+        declared = mood.get("lum_range") or mood.get("target_luminance")
+        if declared is None:
+            errors.append(f"mood.lum_range missing — set it to {list(MOODS[band])} "
+                          f"(the {band} band). QA refuses to guess")
+        elif list(declared) != list(MOODS[band]):
+            errors.append(f"mood.lum_range {list(declared)} contradicts band {band} "
+                          f"{list(MOODS[band])} — one line of truth, fix the range or the band")
+        elif "lum_range" not in mood:
+            warnings.append("mood range is under 'target_luminance' — rename to "
+                            "'lum_range' (QA accepts the alias but the canonical key wins)")
 
     # ── the template ────────────────────────────────────────────────
     got = [s.get("slot") for s in shots]
@@ -78,6 +103,16 @@ def lint(run_dir):
             errors.append(f"{sid}: rests on a countable row of {noun}s — Seedance cannot "
                           "count (measured: a five-piece set rendered four, four times). "
                           "Show a stack, a pile, or one hero unit")
+        # Multi-handler group beat: several people + a distribution verb on the
+        # product = an instruction to render several products, whatever the
+        # uniqueness line says. Measured: two footballs at once, severity class 1.
+        if noun and noun.lower() in action.lower() and DISTRIBUTION.search(action) \
+                and len(PERSON_WORDS.findall(action)) >= 2 \
+                and not SINGLE_OBJECT.search(action):
+            errors.append(f"{sid}: a group beat distributes the {noun} among several "
+                          "people — Seedance renders several. Choreograph ONE object's "
+                          "relay: 'the same single {noun} goes from her hands to his, "
+                          "one object the whole time, never two in the air'")
         people = s.get("people") or {}
         if people.get("present") and people.get("face_visible", True):
             face_beats += 1

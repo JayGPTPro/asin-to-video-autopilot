@@ -86,6 +86,11 @@ and review called it "barely moves").** A freeze buys stillness ONLY if the came
   move -> lock -> burst, never a long hush.
 - QA verifies this with the per-beat motion metric (qa.py): a signature beat that
   measures near-static failed, whatever the prompt said.
+- **Underwater and buoyancy moves are slow by nature** (measured: a beautiful
+  underwater plunge was genuinely the film's least kinetic beat). A signature
+  move that lives in water must write its BURST into the beat — the surface
+  break, the grab, the crash of the crown — exactly as the freeze rule demands
+  a sprint around the hold. Drift alone cannot carry a wow shot.
 
 ## 5a-bis. A move that goes INSIDE an object must light the inside
 
@@ -144,6 +149,18 @@ Measured four generations in a row: a five-piece set rendered as four, every tim
 once with a duplicate. NEVER rest a beat on a countable row of products. Show a
 stack, a pile, one hero unit, or the product in use — the set size lives in the
 overlay text, where it is typed, not generated. The lint refuses countable rows.
+
+## 8b. A group beat choreographs ONE object's path
+
+Measured (16.8): "the football snaps around the circle, quick low passes" rendered TWO
+footballs simultaneously — past an explicit categorical-uniqueness line AND a
+"no second football" line, and it cost the film a 3-second trim. A distribution verb
+("passes around", "flies between", "goes from X to Y to Z") over several people is an
+instruction to render several products; the uniqueness line cannot protect a beat whose
+action describes simultaneous handling. **Write the relay, not the flurry**: one
+continuous path, named hand to hand — "the same single football goes from her hands to
+his, then to the boy's, one object the whole time, never two in the air". The lint
+refuses multi-handler beats without this language.
 
 ## 9. Density: 230 characters per second of film
 

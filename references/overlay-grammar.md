@@ -37,6 +37,14 @@ architecture makes structurally impossible.
    label or hands is an automatic reposition, whatever the numbers said.
    Measured: a super passed every numeric check while sitting straight on a
    person's head. Numbers cannot see a face; the eye pass can.
+   **A reposition moves the super to a DIFFERENT screen quadrant than its
+   neighbors, never just to the nearest empty space.** Measured: an eye-pass
+   fix nudged a super sideways into the same corner as two others, and the
+   film shipped with four supers stacked top-left. overlay_qa's set-level
+   DISTRIBUTION check now refuses a stacked corner, and its HIERARCHY check
+   refuses a film whose supers are all one tier or never use the hero tier —
+   the two laws below are enforced, not aspirational. The differentiator gets
+   the top tier; the close never carries the smallest text in the film.
 
 ## The two laws (unchanged, they predate the themes)
 

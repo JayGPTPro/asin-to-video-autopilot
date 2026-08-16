@@ -79,7 +79,18 @@ def main():
     qa_dir = run / "qa"
     qa_dir.mkdir(exist_ok=True)
     brief = json.loads((run / "brief.json").read_text())
-    lo, hi = (brief.get("mood") or {}).get("lum_range", [55, 90])
+    # NEVER default silently. Measured: a brief carried its range under
+    # 'target_luminance', the old [55,90] fallback measured a bright beach film
+    # against the lamplit band, and QA reported a correct picture as broken.
+    MOODS = {"BRIGHT_EVERYDAY": (90, 140), "WARM_LAMPLIT": (55, 90), "MOODY_NIGHT": (25, 55)}
+    mood = brief.get("mood") or {}
+    rng = mood.get("lum_range") or mood.get("target_luminance") or MOODS.get(mood.get("band"))
+    if rng is None:
+        print("QA REFUSED: brief.mood has no lum_range/target_luminance and no known "
+              f"band ({mood.get('band')!r}). Declare the band; guessing a band judges "
+              "the film against the wrong light.")
+        sys.exit(2)
+    lo, hi = rng
     findings = []
 
     dur = float(subprocess.run(
@@ -152,6 +163,13 @@ def main():
                 f"SIGNATURE beat motion {sig} is below the film's median {med} — the "
                 "wow shot is the film's sleepiest shot. The freeze may hold at most "
                 "~2s and the camera must sprint through it (taste.md motion floor)")
+        elif med > 0 and (sig - med) / med < 0.10:
+            # Measured: after a trim shifted the median, a signature beat passed at
+            # EXACTLY the median — a coincidence that read as a verdict. Within a
+            # few percent, the number proves nothing; the eye decides.
+            print(f"  WARN: SIGNATURE motion {sig} is within "
+                  f"{(sig - med) / med * 100:.0f}% of the median {med} — this pass is "
+                  f"a coincidence, not a verdict. Watch the beat and judge by eye.")
 
     print(f"\n{len(findings)} hard findings")
     for x in findings:

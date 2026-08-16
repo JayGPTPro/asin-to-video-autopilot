@@ -2,12 +2,21 @@
 
 All via the Genrupt MCP. Prices move — read them live, never from this file.
 
-## 0. Balance + live prices (free)
+## 0. Balance + planning prices (free)
 
-`get_credit_balance_and_costs` with two `video_generation` presets:
-`seedance_2_5_reference` at 720p x film seconds (master) and 480p x 4s (probe).
-Record `estimatedCustomerCostUSD` for both into the run state; every later money
-line quotes THESE numbers.
+`get_credit_balance_and_costs` with NO operations — for the balance only.
+**Do not price the renders from `presets`: the presets path cannot quote
+Seedance 2.5.** Measured (16.8): a preset request for `seedance_2_5_reference`
+silently resolved to `seedance2_fast_t2v_720p` keys, returned wrong numbers and
+clamped the duration to 15s "for this model". Plan headroom from the measured
+constants below, then treat the **`costPreview` block in each `generate_video`
+response as the authoritative number** — that is the line you log.
+
+Measured true prices (16.8.2026, at $0.06/credit — re-verify against costPreview
+every run, Genrupt pricing moves):
+- probe 4s/480p `seedance25_ref_480p` = 9 credits = $0.54
+- master 30s/720p `seedance25_ref_720p` = 135 credits = $8.10
+- audio, Seed Audio 30s = 2 credits = $0.12 per track
 
 ## 1. Research scrape (free)
 
@@ -59,7 +68,11 @@ status API served a frozen `processing` for 50+ minutes on a job that had actual
 COMPLETED 5 minutes in — and the BALANCE lagged the same way (a 16:10 balance check
 showed the credits unspent for a 15:24 completion), so neither status nor balance is
 a reliable "lost job" differential inside the stale window. The rule that survives:
-**never re-queue before 60 minutes have passed since queue time.** A premature requeue
+**never re-queue before 60 minutes have passed since queue time — and prove the
+elapsed time with `date`, never by counting the sleeps you issued.** Measured: in
+some harnesses background sleeps do not block the next call, and a session
+"waited" minutes in seconds; only `date` against the queue timestamp is real.
+A premature requeue
 double-bills (147 x 2 on that run — both takes rendered; the only consolation is that
 two takes of one prompt are an A/B, pick the better one). If 60+ minutes pass with
 frozen `updatedAt` AND an unchanged balance, then re-queue with a new idempotencyKey,

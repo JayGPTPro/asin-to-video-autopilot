@@ -29,6 +29,15 @@ Checks (each measured, each prints PASS/FAIL):
     does not exist.
  5. VO SYNC — a super with data-vo must start within +/-0.35s of its phrase.
  6. BREATH — >= 1.0s between one super's exit and the next one's entrance.
+ 7. HIERARCHY (set-level) — at least one super uses the theme's top tier, and
+    the supers are not all one size. Measured: a film shipped with every super
+    at the same tier, the hero tier never used, and the close (a fifth of the
+    film) carrying the SMALLEST text — every per-super check passed. A film
+    whose supers are all one tier has no argument.
+ 8. DISTRIBUTION (set-level) — no more than half the supers share a screen
+    quadrant. Measured: four supers stacked in the same top-left corner, each
+    individually fine. The eye-pass reposition must move a super to a
+    DIFFERENT quadrant than its neighbors, never just the nearest empty spot.
 """
 import sys, re, json, subprocess, tempfile, os, warnings
 from PIL import Image
@@ -231,6 +240,29 @@ def main():
         gap = b["start"] - (a["start"] + a["dur"])
         if gap < BREATH_MIN:
             fails.append(f"BREATH: {a['id']} -> {b['id']} gap {gap:.2f}s (< {BREATH_MIN}s)")
+
+    # 7. HIERARCHY + 8. DISTRIBUTION — checks on the SET, not the super
+    if len(sups) >= 2:
+        sizes, quads = [], []
+        for s in sups:
+            x0, y0, x1, y1, fs = box_estimate(s, class_px)
+            sizes.append(fs)
+            cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
+            quads.append(("T" if cy < 360 else "B") + ("L" if cx < 640 else "R"))
+        hero_px = theme["sizes_px"]["hero"]
+        if max(sizes) < hero_px * 0.85:
+            fails.append(f"HIERARCHY: no super reaches the theme's top tier "
+                         f"({hero_px}px hero; largest here {max(sizes)}px) — a film "
+                         f"whose supers are all one tier has no argument")
+        if len(set(sizes)) == 1:
+            fails.append(f"HIERARCHY: all {len(sups)} supers are the same size "
+                         f"({sizes[0]}px) — intensity must follow importance")
+        from collections import Counter
+        q, n = Counter(quads).most_common(1)[0]
+        if n > len(sups) / 2:
+            fails.append(f"DISTRIBUTION: {n} of {len(sups)} supers sit in the same "
+                         f"{q} quadrant ({quads}) — reposition to different quadrants, "
+                         f"never stack a corner")
 
     print()
     if fails:
