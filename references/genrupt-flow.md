@@ -93,10 +93,11 @@ beat, grooves through the four use beats, resolves warm on the close"). Write th
 curve INTO the promptRequest with rough second marks. A bed that ignores the film is
 wallpaper; wallpaper is what failed.
 
-**5a-bis. Audio is UNPRICED but CHEAP — count it, do not fear it.**
-`get_credit_balance_and_costs` has no operation key for audio (verified), so
-`generate_project_audio` returns no preview. Measured on a clean single-session run:
-**~3 credits per track, about USD 0.20.** So generating 2-3 music candidates costs
+**5a-bis. Audio is CHEAP and priceable via presets.**
+Quote it live: `get_credit_balance_and_costs {presets: [{workflow:
+"audio_generation", audioDurationSeconds: 30, trackCount: N}]}` returned a real
+preview (measured live: 2 credits, ~USD 0.12 per 30s track). The old
+operation-key form still has no audio key — use the presets form. So generating 2-3 music candidates costs
 well under a dollar and the quality gain is worth it. What you must NOT do is infer
 the price from a balance delta: one run did that with other sessions active and
 reported a USD 27.06 spend on a run that truly cost about USD 9.36. Count the tracks

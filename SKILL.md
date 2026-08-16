@@ -56,12 +56,12 @@ The rule:
 2. **A balance delta is only evidence when you have confirmed nothing else is
    running** on the account. Otherwise it is noise, in both directions: it can invent
    spending you did not do, and it can hide a job that did not run.
-3. **Audio is cheap but unpriced.** `get_credit_balance_and_costs` has no operation
-   key for audio (verified), so `generate_project_audio` returns no preview. Measured
-   from a clean single-session run: **about 3 credits per track, roughly USD 0.20.**
-   Budget `audio_track_usd` from config per track, count the tracks you fire, and add
-   them to the running total by hand. Because it is this cheap, generating 2-3 music
-   candidates to pick the best one is the right call — the taste gate stays.
+3. **Audio is cheap and now PRICEABLE.** Quote it live with the `presets` form:
+   `get_credit_balance_and_costs {presets: [{workflow: "audio_generation",
+   audioDurationSeconds: 30, trackCount: N}]}` — measured live: 2 credits
+   (~USD 0.12) per 30s track. (The old operation-key form has no audio key; the
+   presets form does.) Because it is this cheap, generating 2-3 music candidates
+   and 2 VO takes to pick the best is the right call — the taste gate stays.
 4. A content-filter refusal on audio costs nothing, same as on video.
 
 ## Run stages

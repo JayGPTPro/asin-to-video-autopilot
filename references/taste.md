@@ -152,7 +152,10 @@ take that was rejected ran ~116 — and thin beats read as a licence for the mod
 invent. Every beat's action carries THREE physical events, a named lens, the light
 direction, and motion speed. If density and the character budget fight, cut a BEAT,
 never the detail. (Budget: ~3,400 chars obeyed beat-for-beat; ~7,500 measurably lost
-the choreography. The composer reports both numbers.) On a 27-30s film the ceiling
+the choreography. The composer reports both numbers.) Plan for the ceiling from
+the FIRST draft: with a 4-person cast block, header and references, the beats get
+roughly 5,200-5,600 chars — about 55-65 words of action per 4s beat. Writing
+long and trimming six times (measured) wastes a session; write to size. On a 27-30s film the ceiling
 binds first: fill the budget to just under it (~185-210 chars/sec) and treat 150 as
 the floor; 230 is the target only up to ~15s of film.
 

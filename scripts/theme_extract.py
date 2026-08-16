@@ -5,8 +5,11 @@ product's own label.
 Usage:
   theme_extract.py <label_image> <base_theme.json> <out_theme.json>
 
-The label image should be the cleanest straight-on label/packaging plate from
-the reference prep (the same crop that feeds the render). The palette comes
+The label image must be a PRODUCT-SURFACE-ONLY crop — tighter than the render
+plate. Measured: a plate that included the product's splash background handed
+the palette to the water (a pool-blue accent from scenery, not the product);
+re-cropping to the shell alone fixed it. Crop out every pixel of scenery,
+splash, props or backdrop before extracting. The palette comes
 from THERE because the product already chose its colors — an overlay that
 echoes the label reads as designed; an arbitrary gold reads as a template.
 
