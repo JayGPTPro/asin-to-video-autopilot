@@ -71,10 +71,10 @@ always ships); the refusal was free.
 QA the probe: `qa.py <probe.mp4> <run_dir> --probe` (mood band) + LOOK at frames
 for product fidelity (label, glass, proportions).
 
-## 4. Master (paid, ~147 credits at 720p x 27s)
+## 4. Master (paid, ~147 credits at 720p x 30s)
 
 Same call, full compiled prompt, `seedanceDuration` = the compile result's
-duration (NOT a hardcoded 30 — post cards are excluded from the timeline),
+duration (the 7-beat template sums to 30),
 `seedanceResolution: "720p"`, new idempotencyKey. Diegetic sound only by
 construction (the composer bans music and voice).
 
