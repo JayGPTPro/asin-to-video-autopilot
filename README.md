@@ -4,14 +4,17 @@ A Claude Code skill. One Amazon ASIN in, a finished 30-second listing video out:
 cinematic footage, sound design, music, voiceover and animated text overlays.
 Zero questions during the run, one cost cap you set once.
 
-Typical cost per video: **9-12 USD** of Genrupt credits. The cap in `config.json`
-stops a run before it can ever exceed what you allowed.
+Each run spends Genrupt credits on the renders and the audio. You set a spending cap
+once, and the run stops before it can ever exceed what you allowed.
 
 ## Install
 
 ```bash
-npx skills add JayGPTPro/asin-to-video-autopilot -g
+npx skills add https://jaygptpro.com/video-autopilot/asin-to-video-autopilot.zip -g -a claude-code
 ```
+
+Run the same line again whenever there is a new version. Then quit and reopen Claude
+Code, because skills are only picked up on a fresh start.
 
 Then, in Claude Code:
 
@@ -26,8 +29,11 @@ Anything missing is printed with the exact fix. Tell Claude to fix it.
 You provide two things:
 
 - **Claude Code** (desktop app or CLI)
-- **A Genrupt account with credits** — rendering (Seedance 2.5), listing scraping,
-  music and voiceover. Connect the Genrupt MCP to Claude from Genrupt's settings.
+- **A Genrupt account with credits** for rendering (Seedance 2.5), listing scraping,
+  music and voiceover. Add Genrupt as an MCP connector pointed at
+  `https://genrupt.com/api/agent/mcp`, or run
+  `claude mcp add --transport http --scope user genrupt https://genrupt.com/api/agent/mcp`.
+  Full setup guide: https://jaygptpro.com/video-autopilot/
 
 The skill also uses free tools on your machine — ffmpeg, Node 18+ (for the overlay
 renderer via npx), Python 3 with pillow + numpy, and whisper-cpp with a `base.en`
@@ -39,7 +45,7 @@ model. Claude installs these for you; `setup/check-env.sh` verifies them.
 /asin-to-video-autopilot B0XXXXXXXXX
 ```
 
-First run creates `config.json` and asks once for your cost cap (default 20 USD).
+First run creates `config.json` and asks once for the spending cap you want per video.
 After that the run is autonomous: it reports each expense as it happens and stops
 only if an action would cross the cap.
 
@@ -66,5 +72,5 @@ Amazon listing videos: 1280x720 (16:9), 30 seconds, English voiceover.
 
 ---
 
-© Jay GPT Pro. All rights reserved. Shared with invited members for their own
-use; not for redistribution or resale.
+© Jay GPT Pro. All rights reserved. Licensed to the individual it was shared with,
+for their own use. Not for redistribution or resale.

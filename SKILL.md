@@ -19,7 +19,7 @@ config exists, a run never stops to ask anything unless it would cross the cost 
 
 ## First run: environment + config
 
-1. Run `setup/check-env.sh`. If anything is MISSING, print the fix lines it gives and
+1. Run `bash setup/check-env.sh`. If anything is MISSING, print the fix lines it gives and
    stop. Never start a run in a broken environment.
 2. If `config.json` does not exist next to this file's install location (or in the
    working directory), copy `setup/config.template.json` to `config.json`, show the
@@ -115,7 +115,12 @@ Stage-by-stage detail lives in `references/` (see the map below). The shape:
    Only then spend. Whatever is left unfixed goes in the report by class, so the
    person knows what they are looking at.
 10. **Post audio** — derived, auditioned, measured (`references/genrupt-flow.md`
-    §5a-5e). The music brief is DERIVED from the film's register, cut rhythm and
+    §5a-5e). **Build the mix with `scripts/mix_audio.py`, never by hand**: it
+    derives the music gain from the measured VO and music levels and then proves
+    the bed is audible by rendering the mix twice, with and against music muted,
+    and comparing. It exits 1 on a buried bed. A hand-written ffmpeg line has
+    buried the music on three runs and shipped it twice, because every absolute
+    number in a finished mix looks correct whether or not the music is there. The music brief is DERIVED from the film's register, cut rhythm and
     energy curve; 2-3 candidates are generated and PICKED by envelope-vs-cuts
     alignment; VO word timings are MEASURED with whisper and verified against
     their beats; the mix keeps SFX forward (they are the realism layer), music
@@ -215,7 +220,7 @@ variant per the rule above).
 | `references/overlay-grammar.md` | The text system: theme kit, choreography library, overlay QA |
 | `references/amazon-video-policy.md` | What Amazon rejects — checked before any credit moves |
 | `overlays/` | themes/, template.html, lib.js, embedded fonts.css |
-| `scripts/` | compose, lint, prep_refs, qa, overlay_qa, theme_extract, policy_check, report |
+| `scripts/` | compose, lint, prep_refs, qa, overlay_qa, theme_extract, policy_check, mix_audio, report |
 
 Every stage above is runnable; the rules were paid for on real productions (two full
 acceptance-grade runs, five review rounds). Do not improvise around a rule — the
