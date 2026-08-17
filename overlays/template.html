@@ -10,31 +10,45 @@
       * { margin: 0; padding: 0; box-sizing: border-box; }
       html, body { width: 1280px; height: 720px; overflow: hidden; background: #000; }
 
-      /* ===== THEME BLOCK — filled from the run's theme.json. One source of
-         truth: every color, font and size below comes from that file. A super
-         that hardcodes its own values is the bug this template exists to
-         prevent. =====
-         body font-family  <- theme.font.family
-         .ink-light        <- theme.ink_light
-         .ink-dark         <- theme.ink_dark  (from the label palette)
-         accent background <- theme.accent    (from the label palette)      */
+      /* ===== THEME BLOCK — every value comes from the run's theme.json.
+         One source of truth: a super that hardcodes its own color or font is
+         the bug this template exists to prevent, and overlay_qa's THEME LOCK
+         check will fail the render for it.
+           body font-family  <- theme.font.family
+           .ink-light        <- theme.ink_light, ALREADY CAPPED to the plate's
+                                99.5th-pct highlight (scripts/integrate.py
+                                measure). Never #FFFFFF over a graded plate.
+           .ink-dark         <- theme.ink_dark   (from the label palette)
+           accent colors     <- theme.accent     (from the label palette)
+           tier sizes        <- theme.sizes_px
+         The sizes below are FLOOR-SAFE placeholders (Amazon publishes 50pt
+         minimum, 100pt preferred, at 720p/1080p). Replace them with the
+         theme's numbers; never go under 50. ===== */
       body { font-family: "THEME_FONT", sans-serif; }
-      #root { perspective: 900px; }
-      .super { position: absolute; opacity: 0; }
-      .ink-light { color: #F5EFE3; text-shadow: 0 2px 16px rgba(20,16,10,.65); }
-      .ink-dark  { color: #24352B; text-shadow: 0 1px 8px rgba(245,239,227,.35); }
-      .hero   { font-size: 132px; font-weight: 200; line-height: 1.02; }
-      .line   { font-size: 40px;  font-weight: 300; }
-      .kicker { font-size: 30px;  font-weight: 300; }
+      #root { perspective: 1200px; }
+
+      /* blur(0.3px): real lenses never resolve a perfect edge. A laser-cut
+         vector edge over filmed grain is the loudest amateur tell. */
+      .super { position: absolute; opacity: 0; filter: blur(0.3px); }
+
+      .ink-light { color: #F5EFE3; text-shadow: 0 2px 14px rgba(12,10,8,.6); }
+      .ink-dark  { color: #24352B; text-shadow: 0 1px 10px rgba(255,255,255,.4); }
+      .hero   { font-size: 150px; font-weight: 700; line-height: 0.96; }
+      .line   { font-size: 58px;  font-weight: 700; }
+      .kicker { font-size: 50px;  font-weight: 500; }
       .g, .w { display: inline-block; }
-      .rule { height: 4px; background: #C9A227; }
-      .dot  { display: inline-block; width: 9px; height: 9px; border-radius: 50%;
+      /* masked-reveal wrapper; the padding/negative-margin pair stops the
+         wrapper clipping descenders (g y p j q) */
+      .reveal { display: block; overflow: hidden;
+                padding-bottom: 0.08em; margin-bottom: -0.08em; }
+      .rule { height: 6px; background: #C9A227; transform-origin: left center; }
+      .dot  { display: inline-block; width: 10px; height: 10px; border-radius: 50%;
               background: #C9A227; margin: 0 14px; vertical-align: middle; }
-      .slab { position: absolute; background: #C9A227; z-index: -1; }
-      /* scrim: added ONLY when overlay_qa.py demands it for a busy zone */
-      .scrim { position: absolute; background:
-               linear-gradient(180deg, rgba(12,10,8,.55), rgba(12,10,8,0));
-               pointer-events: none; }
+      /* scrim: added ONLY when overlay_qa demands it for a busy or low-contrast
+         zone. It is the professional answer to legibility; a hard drop shadow
+         is the amateur one. */
+      .scrim-plate { background: rgba(255,255,255,0.55); border-radius: 14px;
+                     padding: 6px 22px 10px; }
     </style>
   </head>
   <body>
@@ -42,19 +56,34 @@
          data-width="1280" data-height="720">
 
       <video id="film" class="clip" data-clip data-track-index="0"
-             data-start="0" data-duration="30" src="assets/film.mp4" muted
+             data-start="0" data-duration="30" src="assets/film.mp4"
              style="position:absolute; inset:0; width:1280px; height:720px; object-fit:cover;"></video>
 
       <!-- SUPERS GO HERE. The contract for each one:
-           - class="super clip" + ink class chosen by measured zone luminance
-           - data-start / data-duration from MEASURED VO word timestamps
-           - a unique data-track-index
-           - text split into span.w words (or splitGlyphs() for per-letter)
+             - class="super clip" + a tier class + an ink class chosen by the
+               measured zone luminance
+             - data-start / data-duration from MEASURED VO word timestamps.
+               The super lands 0.1-0.3s BEFORE its phrase (read, then hear).
+             - data-vo="the spoken phrase" so overlay_qa can check that sync
+             - a unique data-track-index
+             - text split into span.w words; per-letter only when the build
+               needs it (splitting to chars destroys kerning pairs)
            Example:
       <div class="super ink-light kicker clip" id="s1" data-clip
            data-track-index="1" data-start="4.70" data-duration="2.40"
-           style="left:56px; top:64px; letter-spacing:8px;">
-        <span class="w">COLD-PRESSED</span><span class="dot w"></span><span class="w">USDA ORGANIC</span>
+           data-vo="cold pressed" style="left:64px; top:72px;">
+        <span class="w">Cold-pressed</span><span class="dot w"></span><span class="w">organic</span>
+      </div>
+
+           THE OCCLUDED HERO (one per film, optional but it is the single
+           loudest "expensive" move): place it deliberately ACROSS the subject
+           at hero scale. It is EXEMPT from the dead-space law because
+           scripts/occlude.py punches the subject back over it after the
+           render. Mark it so the box-sheet eye pass knows it is intentional:
+      <div class="super ink-light clip" id="s2" data-clip data-track-index="2"
+           data-start="10.15" data-duration="2.60" data-vo="dry ones"
+           data-occluded="10.15-12.75" style="left:290px; top:130px;">
+        <span class="reveal"><span class="hero">…</span></span>
       </div>
       -->
     </div>
@@ -63,9 +92,18 @@
       const tl = gsap.timeline({ paused: true });
       window.__timelines = { main: tl };
 
-      // Choreograph with lib.js builds only — entrance, hold, exit per super,
-      // using the theme's mapped entrances. Times are film seconds. Example:
-      // wordRise(tl, "#s1", 4.70);
+      // Choreograph with lib.js builds only — entrance, one hold motion, exit
+      // per super, using the theme's mapped entrances. Times are film seconds.
+      //
+      // The two-curve rule: when a mask and its text move together, give them
+      // DIFFERENT durations and eases (text travels ~1.4x further, longer,
+      // harder ease). Same curve on everything is what reads as a preset.
+      //
+      // Per-glyph stagger 0.045-0.05s so ~70-80% of each letter's animation
+      // overlaps its neighbour: that reads as ONE gesture, not a typewriter.
+      //
+      // Example:
+      // wordRise(tl, "#s1", 4.70, { rise: 20, dur: 0.5, stagger: 0.06 });
       // drift(tl, "#s1", 5.40);
       // quietFade(tl, "#s1", 6.70);
     </script>
