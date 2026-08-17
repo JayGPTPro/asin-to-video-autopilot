@@ -23,6 +23,14 @@ emotion film still proves the differentiator on screen.
   write it into the closing beat — the last five seconds are a fifth of the ad and
   they are what the viewer carries out. A close that just "ends" is a film that
   evaporates.
+- **The strongest form of the mirror is IDENTICAL FRAMING, INVERTED STATE.** Not
+  "the close rhymes with the hook" — the same lens, the same distance, the same
+  person in the same seat in the same posture, and the only thing that changed is
+  that the problem is gone. The contrast IS the punch, and it costs nothing to
+  write. Prefer it whenever the hook has a person or a fixed vantage; fall back to
+  the reversed camera move when the hook is pure product. The lint warns when the
+  hook and close use different shot sizes, because the identical-framing version
+  is almost always the better film.
 - The signature shot does NOT go on the hook. It goes on the hero beat, where the
   viewer already knows what they are looking at.
 
@@ -175,6 +183,23 @@ roughly 5,200-5,600 chars — about 55-65 words of action per 4s beat. Writing
 long and trimming six times (measured) wastes a session; write to size. On a 27-30s film the ceiling
 binds first: fill the budget to just under it (~185-210 chars/sec) and treat 150 as
 the floor; 230 is the target only up to ~15s of film.
+
+## 9b. An effect that SPREADS is enumerated, in order, one item per line
+
+When a beat's payoff is something propagating — light filling a room, water
+sheeting off a surface, foam rising, a stain lifting, heat blooming, a coating
+covering — a single sentence renders as a vague haze. The satisfying version
+NAMES 5-8 specific things the effect reaches, in the order it reaches them,
+one line each:
+
+> the light catches the rim first, then the handle, then the counter behind it,
+> then the tiles, then the far wall
+
+This is the same instinct as the density rule (three physical events per beat)
+applied to a single continuous event: the model needs the path, not the noun.
+Two guards: keep it to ONE spreading idea per film (two competing effects read
+as chaos), and it never licenses particles — the spread is surfaces changing
+state, not glitter filling the air (§5b still holds).
 
 ## 10. One world
 
