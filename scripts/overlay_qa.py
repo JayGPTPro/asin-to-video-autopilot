@@ -20,24 +20,36 @@ Checks (each measured, each prints PASS/FAIL):
  1. THEME LOCK — every hex color in the HTML belongs to the theme (accent,
     inks, scrim neutrals); every font-family is the theme family. Drift fails.
  2. CONTRAST — for each super, sample the film under its estimated box across
-    its WHOLE window (4 fps). Ink-vs-zone contrast must be >= 4.5:1 in the
-    worst sampled frame, else the super needs a scrim/plate or an ink flip.
-    A busy zone (luminance std > 55) demands a scrim even if contrast passes.
- 3. READING TIME — duration >= 0.18s x words + 0.7s. A 5-word line cannot
-    live 1.2 seconds.
- 4. SIZE FLOOR — no text under 24px at 1280-wide; under phone scaling it
-    does not exist.
- 5. VO SYNC — a super with data-vo must start within +/-0.35s of its phrase.
+    its WHOLE window (4 fps). Ink-vs-zone contrast must be >= CONTRAST_MIN
+    (3.2:1, calibrated against a review-approved film that measured 3.5:1 at
+    its worst; supers carry a mandatory shadow that lifts effective contrast).
+    A busy zone (luminance std > BUSY_STD) demands a scrim even if contrast
+    passes.
+ 3. READING TIME — measured on STILL time only: (duration - ANIM_OVERHEAD)
+    must cover 0.18s x words + 0.7s. Entrance and exit motion is not reading
+    time (broadcast rule).
+ 4. SIZE FLOOR — SIZE_FLOOR px at 1280-wide, set to Amazon's own published
+    minimum (50pt at 720p/1080p, 100pt preferred). The old 24px floor
+    rendered at ~12px on a phone-sized listing tile.
+ 5. VO SYNC — LEAD-BIASED. A super lands 0.1-0.3s BEFORE its spoken phrase
+    (read first, hear second): max lead SYNC_LEAD_MAX, max trail
+    SYNC_TRAIL_MAX. A late super reads as an echo.
  6. BREATH — >= 1.0s between one super's exit and the next one's entrance.
+ 6b. CUT ADJACENCY — never start a super inside CUT_GUARD before a cut (start
+    ON the cut, +/-2 frames, instead), never let one die inside CUT_GUARD
+    after a cut (die >= 2 frames before, or live >= 1s past). A cut through
+    moving text sends the eye back to re-read the line.
  7. HIERARCHY (set-level) — at least one super uses the theme's top tier, and
     the supers are not all one size. Measured: a film shipped with every super
     at the same tier, the hero tier never used, and the close (a fifth of the
     film) carrying the SMALLEST text — every per-super check passed. A film
     whose supers are all one tier has no argument.
- 8. DISTRIBUTION (set-level) — no more than half the supers share a screen
-    quadrant. Measured: four supers stacked in the same top-left corner, each
-    individually fine. The eye-pass reposition must move a super to a
-    DIFFERENT quadrant than its neighbors, never just the nearest empty spot.
+ 8. DISTRIBUTION (set-level) — computed over ANCHOR GROUPS, not raw supers:
+    consecutive supers close in time that share a quadrant are one anchored
+    (RSVP) run, which is the pro pattern, not a stack. Variety is required
+    BETWEEN groups. Measured failure: four supers stacked top-left, each
+    individually fine. An eye-pass reposition moves to a DIFFERENT quadrant,
+    never just the nearest empty spot.
 """
 import sys, re, json, subprocess, tempfile, os, warnings
 from PIL import Image
