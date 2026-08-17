@@ -1,0 +1,35 @@
+{
+  "name": "condensed-editorial",
+  "when": "Tech, tools, sport, editorial-premium \u2014 any product whose argument is capability. The condensed grotesque register that reads as art-directed in 2026; also a strong alternate default when thin-cinematic feels dated.",
+  "font": {
+    "family": "Archivo Narrow",
+    "hero_weight": 700,
+    "line_weight": 700,
+    "kicker_weight": 500
+  },
+  "case": "mixed",
+  "sizes_px": {
+    "hero": 200,
+    "line": 64,
+    "kicker": 50
+  },
+  "tracking_px": {
+    "hero": -2,
+    "line": 0,
+    "kicker": 4
+  },
+  "ink_light": "#F2EFE9",
+  "ink_dark": "FROM_LABEL",
+  "accent": "FROM_LABEL",
+  "accent_jobs": [
+    "a thick rule (6px) that draws under the hero",
+    "accent-colored single word inside the line"
+  ],
+  "entrances": [
+    "maskReveal",
+    "letterRise"
+  ],
+  "hold": "drift",
+  "exit": "quietFade",
+  "notes": "Tall, tight, edge-confident. The hero fills the frame width; mixed case; hierarchy by size only. Mask reveals with the two-curve rule (text travels ~1.4x the mask, longer, harder ease)."
+}

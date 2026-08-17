@@ -50,10 +50,25 @@ FPS_SAMPLE = 4
 # frame. 4.5 would have forced a scrim onto a super a human already passed.
 CONTRAST_MIN = 3.2
 BUSY_STD = 55
-SIZE_FLOOR = 24
+# Amazon's own moderation guide: text minimum 50pt (100pt preferred) at
+# 720p/1080p. Our old floor of 24px rendered at ~12px on a phone listing tile.
+SIZE_FLOOR = 50
 READ_PER_WORD, READ_BASE = 0.18, 0.7
-SYNC_TOL = 0.35
+# Reading time only counts while the text is STILL (legibility.info / broadcast
+# rule): entrance + exit motion is subtracted before the check.
+ANIM_OVERHEAD = 0.9
+# VO sync is LEAD-BIASED: the viewer reads, then hears (0.1-0.3s lead is the
+# pro placement). A super may lead its phrase by up to 0.35s; it may trail it
+# by at most 0.05s — a late super reads as an echo.
+SYNC_LEAD_MAX = 0.35
+SYNC_TRAIL_MAX = 0.05
 BREATH_MIN = 1.0
+# Cut adjacency (ITC/Netflix): never START a super inside the 1s before a cut,
+# never let one DIE inside the 1s after a cut. Sitting exactly ON the cut
+# (within 2 frames) is the professional exception, and dying at a cut means
+# ending at least 2 frames BEFORE it.
+CUT_GUARD = 1.0
+CUT_SNAP = 0.084  # 2 frames at 24fps
 NEUTRALS = {"#000", "#000000", "#FFF", "#FFFFFF"}
 
 
@@ -83,9 +98,19 @@ def parse_supers(html):
             return a.group(1) if a else default
 
         style = attr("style", "")
-        text = re.sub(r"<[^>]+>", " ", m.group(1))
+        inner = m.group(1)
+        text = re.sub(r"<[^>]+>", " ", inner)
         text = re.sub(r"&nbsp;|\s+", " ", text).strip()
+        # per-glyph markup ("G r i p s") collapses back into words before word
+        # counting, or the read-time math runs 5x too strict
+        text = re.sub(r"\b\w(?: \w)+\b(?=[ .!?]|$)",
+                      lambda mm: mm.group(0).replace(" ", ""), text)
         px = re.search(r"font-size:\s*(\d+)px", style)
+        # a tier class may live on an inner span (hero stacks) — look there too
+        classes = attr("class", "")
+        for tier in ("hero", "line", "kicker"):
+            if tier not in classes.split() and re.search(rf'class="[^"]*\b{tier}\b', inner):
+                classes += f" {tier}"
         sups.append({
             "id": attr("id", "?"),
             "start": float(attr("data-start", "0")),
@@ -93,7 +118,7 @@ def parse_supers(html):
             "vo": attr("data-vo"),
             "text": text,
             "style": style,
-            "classes": attr("class", ""),
+            "classes": classes,
             "font_px": int(px.group(1)) if px else None,
         })
     return [s for s in sups if s["text"]]
@@ -132,6 +157,14 @@ def sample_zone(film, t0, t1, box):
             out.append((mean, var ** 0.5))
             t += 1.0 / FPS_SAMPLE
     return out
+
+
+def detect_cuts(film):
+    r = subprocess.run(
+        ["ffmpeg", "-i", str(film), "-vf", "select='gt(scene,0.25)',metadata=print",
+         "-f", "null", "-"], capture_output=True, text=True)
+    return [round(float(l.split("pts_time:")[1].split()[0]), 2)
+            for l in r.stderr.splitlines() if "pts_time:" in l]
 
 
 def draw_box_sheet(film, sups, class_px, out_dir):
@@ -200,12 +233,14 @@ def main():
         if fs < SIZE_FLOOR:
             fails.append(f"SIZE: {label} is {fs}px (< {SIZE_FLOOR}px)")
 
-        # 3. READING TIME
+        # 3. READING TIME — measured on STILL time only, not the animation
         nwords = len(s["text"].split())
         need = READ_PER_WORD * nwords + READ_BASE
-        if s["dur"] < need:
-            fails.append(f"READ TIME: {label} shows {nwords} words for "
-                         f"{s['dur']:.2f}s (needs {need:.2f}s)")
+        still = s["dur"] - ANIM_OVERHEAD
+        if still < need:
+            fails.append(f"READ TIME: {label} has {still:.2f}s of still time for "
+                         f"{nwords} words (needs {need:.2f}s; entrance/exit motion "
+                         f"does not count as reading time)")
 
         # 2. CONTRAST over the whole window
         ink = ink_l["dark"] if "ink-dark" in s["classes"] else ink_l["light"]
@@ -220,7 +255,7 @@ def main():
             fails.append(f"BUSY ZONE: {label} luminance std {busiest:.0f} — "
                          f"add a scrim even though contrast may pass")
 
-        # 5. VO SYNC
+        # 5. VO SYNC — lead-biased: read first, hear second
         if s["vo"] and words:
             phrase = s["vo"].lower().split()
             best = None
@@ -231,15 +266,37 @@ def main():
                     break
             if best is None:
                 fails.append(f"VO SYNC: {label} phrase '{s['vo']}' not found in transcript")
-            elif abs(s["start"] - best) > SYNC_TOL:
-                fails.append(f"VO SYNC: {label} starts {s['start']:.2f}, phrase "
-                             f"spoken at {best:.2f} (off by {abs(s['start']-best):.2f}s)")
+            else:
+                lead = best - s["start"]   # positive = super leads the word
+                if lead > SYNC_LEAD_MAX:
+                    fails.append(f"VO SYNC: {label} leads its phrase by {lead:.2f}s "
+                                 f"(max {SYNC_LEAD_MAX}s)")
+                elif lead < -SYNC_TRAIL_MAX:
+                    fails.append(f"VO SYNC: {label} TRAILS its phrase by {-lead:.2f}s "
+                                 f"— the super must land 0.1-0.3s BEFORE the word, "
+                                 f"never after it")
 
     # 6. BREATH
     for a, b in zip(sups, sups[1:]):
         gap = b["start"] - (a["start"] + a["dur"])
         if gap < BREATH_MIN:
             fails.append(f"BREATH: {a['id']} -> {b['id']} gap {gap:.2f}s (< {BREATH_MIN}s)")
+
+    # 6b. CUT ADJACENCY — a cut through moving text sends the eye back to
+    # re-read (measured in eye-tracking research; ITC/Netflix codify it).
+    cuts = detect_cuts(film)
+    for s in sups:
+        s_end = s["start"] + s["dur"]
+        for c in cuts:
+            on_cut = abs(s["start"] - c) <= CUT_SNAP
+            if not on_cut and 0 < (c - s["start"]) < CUT_GUARD:
+                fails.append(f"CUT: {s['id']} starts {c - s['start']:.2f}s before the "
+                             f"cut at {c:.2f}s — start ON the cut (±2 frames) or ≥1s before")
+            dies_after = 0 < (s_end - c) < CUT_GUARD
+            clean_before = s_end <= c - CUT_SNAP
+            if dies_after and not clean_before:
+                fails.append(f"CUT: {s['id']} ends {s_end - c:.2f}s after the cut at "
+                             f"{c:.2f}s — die ≥2 frames before the cut, or live ≥1s past it")
 
     # 7. HIERARCHY + 8. DISTRIBUTION — checks on the SET, not the super
     if len(sups) >= 2:
@@ -257,12 +314,25 @@ def main():
         if len(set(sizes)) == 1:
             fails.append(f"HIERARCHY: all {len(sups)} supers are the same size "
                          f"({sizes[0]}px) — intensity must follow importance")
-        from collections import Counter
-        q, n = Counter(quads).most_common(1)[0]
-        if n > len(sups) / 2:
-            fails.append(f"DISTRIBUTION: {n} of {len(sups)} supers sit in the same "
-                         f"{q} quadrant ({quads}) — reposition to different quadrants, "
-                         f"never stack a corner")
+        # DISTRIBUTION operates on ANCHOR GROUPS, not raw supers: consecutive
+        # supers close in time that share a quadrant are ONE anchored (RSVP)
+        # group — successive words in one optical center read faster and are
+        # the pro pattern, not a stack. Variety is required BETWEEN groups.
+        groups = []
+        for s, q in zip(sups, quads):
+            if groups and q == groups[-1]["q"] and \
+                    s["start"] - groups[-1]["end"] < 3.0:
+                groups[-1]["end"] = s["start"] + s["dur"]
+                groups[-1]["n"] += 1
+            else:
+                groups.append({"q": q, "end": s["start"] + s["dur"], "n": 1})
+        if len(groups) == 1 and groups[0]["n"] < len(sups):
+            pass  # a single anchored run is legal
+        gq = [g["q"] for g in groups]
+        if len(groups) >= 2 and len(set(gq)) == 1:
+            fails.append(f"DISTRIBUTION: all {len(groups)} anchor groups sit in the "
+                         f"same {gq[0]} quadrant — vary placement BETWEEN groups "
+                         f"(inside a group, one shared optical center is correct)")
 
     print()
     if fails:

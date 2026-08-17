@@ -90,6 +90,53 @@ architecture makes structurally impossible.
 - Mirror the beats that rhyme: the same construction on opposite sides at
   different sizes reads as a campaign, not a sampler.
 
+## The integration pass (make the type belong to the plate)
+
+Amateur text is applied ON a video; professional text is built INTO it. Three
+mechanical steps, all measured (research doc 17.8):
+
+1. **Ink capped to the plate's highlight.** `scripts/integrate.py measure <film>`
+   once per film → scale the theme's `ink_light` so its luma never exceeds the
+   99.5th-percentile luma of the plate. Measured: pure #FFF was 55% brighter
+   than the plate's own brightest pixel and read as a sticker. This one line
+   does more than every other integration step combined.
+2. **Matched grain AFTER the composite**, over everything:
+   `integrate.py grain <in> <out> --sigma <measured>`. Grain on the film but
+   not the type is the loudest amateur tell.
+3. **Sub-pixel soften** — `filter: blur(0.3px)` on supers (in the template).
+   Real lenses never resolve a perfect edge.
+
+## Occlusion — the subject passes IN FRONT of the text
+
+The single loudest "expensive" move available: one hero super per film crosses
+the frame at hero scale, and the person/product occludes it
+(`scripts/occlude.py <composite> <plate> <out> --from T0 --to T1`). Rules:
+
+- **ONE occlusion moment per film**, on the hero-tier super. Everywhere = gimmick.
+- The occluded super is **exempt from the dead-space law** — text may cross the
+  subject exactly because the subject wins. Mark it in the HTML with a comment
+  and check the effect by eye in the final (the subject's face must sit ON TOP
+  of the letters).
+- Mask only the super's window, never the whole film. ~1.4s/frame with rembg;
+  the macOS Vision engine (auto-detected) is ~8x faster.
+- occlude.py self-verifies: it FAILS if the occluded window comes out frozen
+  (measured failure: inline trims + fps filters in the merge graph froze the
+  segment; the fixed pipeline pre-trims to clean intermediates).
+
+## Timing laws (broadcast-grade, enforced by overlay_qa)
+
+- **Reading time counts only while the text is STILL** — entrance/exit motion
+  is subtracted (0.9s overhead) before the words-per-second check.
+- **Cut adjacency**: never start a super in the 1s before a cut (start ON the
+  cut ±2 frames instead), never let one die in the 1s after a cut (die ≥2
+  frames before, or live ≥1s past). A cut through moving text sends the eye
+  back to the start of the line.
+- **VO sync is lead-biased**: the super lands 0.1-0.3s BEFORE its spoken
+  phrase (read first, hear second). Max lead 0.35s; max trail 0.05s.
+- **Anchored groups**: successive supers may share ONE optical center (the
+  RSVP pattern — less eye travel, faster reading). Variety is required BETWEEN
+  groups, not within them.
+
 ## The style card
 
 Before compositing the full film, render ~6s of one real beat with the locked

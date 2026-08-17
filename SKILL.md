@@ -121,16 +121,18 @@ Stage-by-stage detail lives in `references/` (see the map below). The shape:
     their beats; the mix keeps SFX forward (they are the realism layer), music
     ducked under, VO on top. Never ship the only candidate unheard.
 11. **Overlays — the theme kit** (`references/overlay-grammar.md`). Pick ONE theme
-    from `overlays/themes/` by product register (thin-cinematic is the default),
-    lock its palette from the product's own label (`scripts/theme_extract.py`),
-    build from `overlays/template.html` + the `lib.js` choreography library with
-    EMBEDDED fonts, and QA the layer with `scripts/overlay_qa.py` (theme lock,
-    worst-frame contrast, reading time, VO sync from measured word timestamps,
-    breath gaps) — FAIL blocks the composite. Then LOOK at the
-    `qa/overlay-boxes/` sheet it writes: a box on a face, the product, a label
-    or hands is an automatic reposition; numbers cannot see a face. Render the 6s style card for the
-    report before compositing the full film. **Brand marks: real or absent**
-    (taste.md §4b).
+    from `overlays/themes/` (five registers incl. condensed-editorial), lock its
+    palette from the product's own label (`scripts/theme_extract.py`) and **cap
+    the ink to the plate's highlight** (`scripts/integrate.py measure`), build
+    from `overlays/template.html` + `lib.js` with EMBEDDED fonts, and QA with
+    `scripts/overlay_qa.py` (theme lock, contrast, STILL-time reading, cut
+    adjacency, lead-biased VO sync, breath, hierarchy, anchor-group
+    distribution) — FAIL blocks the composite. LOOK at `qa/overlay-boxes/`:
+    a box on a face/product/label is a reposition, EXCEPT the one occluded
+    hero super, where the subject wins by construction. After the composite:
+    **one occlusion moment** (`scripts/occlude.py`) and **matched grain**
+    (`integrate.py grain`). Sizes meet Amazon's 50pt/720p floor. **Brand
+    marks: real or absent** (taste.md §4b).
 12. **THE AUDIO TASTE GATE.** Audio is the one layer meters cannot judge: every
     measured number can pass while the track sounds cheap, choppy or wrong for
     the picture (it happened; it failed review twice). So audio gets what

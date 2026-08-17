@@ -1,16 +1,35 @@
 {
   "name": "thin-cinematic",
-  "when": "The default. Wellness, beauty, personal care, home, food, baby — any calm or premium register. Won a 4-option rendered A/B against slab fills and side panels.",
-  "font": { "family": "Outfit", "hero_weight": 200, "line_weight": 300, "kicker_weight": 300 },
-  "case": "upper",
-  "sizes_px": { "hero": 132, "line": 40, "kicker": 30 },
-  "tracking_px": { "hero": 16, "line": 6, "kicker": 8 },
+  "when": "The default. Wellness, beauty, personal care, home, food, baby \u2014 any calm or premium register. Won a 4-option rendered A/B against slab fills and side panels.",
+  "font": {
+    "family": "Outfit",
+    "hero_weight": 200,
+    "line_weight": 300,
+    "kicker_weight": 300
+  },
+  "case": "mixed",
+  "sizes_px": {
+    "hero": 150,
+    "line": 58,
+    "kicker": 50
+  },
+  "tracking_px": {
+    "hero": 16,
+    "line": 6,
+    "kicker": 8
+  },
   "ink_light": "#F5EFE3",
   "ink_dark": "FROM_LABEL",
   "accent": "FROM_LABEL",
-  "accent_jobs": ["rule under the hero (drawn, scaleX 0 to 1)", "dot separator between words"],
-  "entrances": ["letterRise", "wordRise"],
+  "accent_jobs": [
+    "rule under the hero (drawn, scaleX 0 to 1)",
+    "dot separator between words"
+  ],
+  "entrances": [
+    "letterRise",
+    "wordRise"
+  ],
   "hold": "drift",
   "exit": "quietFade",
-  "notes": "Hierarchy by SIZE only, never by weight jumps. One accent job per beat. Soft rises in sequence, power3.out."
+  "notes": "Hierarchy by SIZE only, never by weight jumps. One accent job per beat. Soft rises in sequence, power3.out. Sizes meet the Amazon 50pt/720p floor; mixed case per Amazon creative policy."
 }

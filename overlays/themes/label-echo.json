@@ -1,16 +1,35 @@
 {
   "name": "label-echo",
   "when": "Products whose LABEL is the design argument: heritage brands, serif lockups, apothecary/craft packaging, luxury. The type echoes the label's world instead of imposing ours.",
-  "font": { "family": "Fraunces", "hero_weight": 300, "line_weight": 300, "kicker_weight": 600 },
+  "font": {
+    "family": "Fraunces",
+    "hero_weight": 300,
+    "line_weight": 300,
+    "kicker_weight": 600
+  },
   "case": "mixed",
-  "sizes_px": { "hero": 116, "line": 38, "kicker": 24 },
-  "tracking_px": { "hero": 1, "line": 2, "kicker": 7 },
+  "sizes_px": {
+    "hero": 120,
+    "line": 56,
+    "kicker": 48
+  },
+  "tracking_px": {
+    "hero": 1,
+    "line": 2,
+    "kicker": 7
+  },
   "ink_light": "#F5EFE3",
   "ink_dark": "FROM_LABEL",
   "accent": "FROM_LABEL",
-  "accent_jobs": ["hairline rule (2px) drawn under the hero", "small-caps kicker in the accent color"],
-  "entrances": ["maskReveal", "wordRise"],
+  "accent_jobs": [
+    "hairline rule (2px) drawn under the hero",
+    "small-caps kicker in the accent color"
+  ],
+  "entrances": [
+    "maskReveal",
+    "wordRise"
+  ],
   "hold": "drift",
   "exit": "quietFade",
-  "notes": "Mixed case on the hero (serif upper-only reads as a bank). The kicker alone is uppercase. Reveals are slower (0.8-0.9s) — elegance is tempo."
+  "notes": "Mixed case on the hero (serif upper-only reads as a bank). The kicker alone is uppercase. Reveals are slower (0.8-0.9s) \u2014 elegance is tempo."
 }
