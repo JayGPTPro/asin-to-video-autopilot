@@ -143,6 +143,22 @@ def lint(run_dir):
         warnings.append("no beat has a facial REACTION as a physical event — emotion "
                         "carried as adjectives does not render")
 
+    # ── hook/close mirror ───────────────────────────────────────────
+    # The strongest close is IDENTICAL FRAMING with the state inverted (same
+    # lens, same seat, same posture, problem gone). A different shot size is
+    # legal (a reversed move mirrors too) but is usually the weaker film.
+    hook = next((x for x in shots if x.get("slot") == "hook"), None)
+    close = next((x for x in shots if x.get("slot") == "close"), None)
+    if hook and close:
+        hs = ((hook.get("camera") or {}).get("size") or "").strip().upper()
+        cs = ((close.get("camera") or {}).get("size") or "").strip().upper()
+        hook_has_people = (hook.get("people") or {}).get("present")
+        if hs and cs and hs != cs and hook_has_people:
+            warnings.append(
+                f"hook is {hs} and close is {cs}: with a person in the hook, the "
+                f"strongest close is the SAME framing with the state inverted "
+                f"(same seat, same posture, problem gone) — taste.md §2")
+
     # ── end states ──────────────────────────────────────────────────
     for slot in ("hero", "close"):
         s = next((x for x in shots if x.get("slot") == slot), None)
