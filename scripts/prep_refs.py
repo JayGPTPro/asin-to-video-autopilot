@@ -26,6 +26,19 @@ from pathlib import Path
 from PIL import Image
 
 RATIO_MIN, RATIO_MAX = 0.5, 2.0
+# Measured 17.8: a 290x290 plate failed the render with "expected the width to be
+# at least 300px". The provider rejects at DOWNLOAD time, i.e. after the job is
+# priced — the same class of failure the ratio guard exists to prevent. 320 gives
+# margin over the observed 300 floor.
+MIN_DIM = 320
+
+
+def upscale_to_min(img):
+    w, h = img.size
+    if min(w, h) >= MIN_DIM:
+        return img
+    k = MIN_DIM / min(w, h)
+    return img.resize((round(w * k), round(h * k)), Image.LANCZOS)
 
 
 def pad_to_legal(img):
@@ -55,10 +68,12 @@ def main(spec_path):
         if p.get("crop"):
             img = img.crop(tuple(p["crop"]))
         img = pad_to_legal(img)
+        img = upscale_to_min(img)
         out = out_dir / p["out"]
         img.save(out, quality=92)
         w, h = img.size
-        print(f"{out.name}: {w}x{h} ratio {w / h:.2f}")
+        print(f"{out.name}: {w}x{h} ratio {w / h:.2f}"
+              + ("  (upscaled to clear the 300px floor)" if min(w, h) == MIN_DIM else ""))
 
 
 if __name__ == "__main__":

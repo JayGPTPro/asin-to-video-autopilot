@@ -138,11 +138,38 @@ natural conversational flow, no long pauses", and QA the take mechanically: whis
 word timestamps → the largest inter-word gap must be under ~0.9s AND sit at a
 sentence boundary, never inside a phrase. Generate 2 takes and pick by gap profile.
 
-**The music FLOOR (measured over-correction).** After "the music is boring" the next
-mix buried it at -16dB under and failed review as "I hear no music at all". The bed
-sits 8-10dB under the voice, gently ducked — present in every no-speech window.
-Verify mechanically: in a speech-free second, the mix's RMS must be well above the
-SFX track alone (the music is contributing), and by ear it reads as real music.
+**The music FLOOR (measured over-correction, and measured AGAIN 17.8).** After "the
+music is boring" the next mix buried it at -16dB under and failed review as "I hear
+no music at all". It happened a THIRD time on the bug-zapper run and shipped that
+way, so the floor now has numbers and an honest test instead of a feel.
+
+**Set the gain from measured levels, never from a guessed multiplier.** Measure both
+sources (`ffmpeg -i X -af volumedetect -f null -`), then place the bed 8-10dB under
+the voice's mean. Worked example that failed: VO mean -19.6dB, music mean -24.4dB,
+and a `volume=0.30` guess put the bed at ~-35dB — 15dB under, not 9. The correct
+factor was ~1.0.
+
+**Duck GENTLY, because the read is nearly continuous.** A 74-80% speech budget means
+a ratio-6 sidechain is not ducking, it is a permanent mute: the bed only surfaces in
+the handful of half-seconds between phrases. Use ratio 2.5-3 with a threshold high
+enough that quiet passages pass untouched, and expect the bed to dip a few dB under
+speech, not twenty.
+
+**THE VERIFICATION THAT ACTUALLY WORKS.** The old check — "in a speech-free second
+the mix's RMS must be well above the SFX track alone" — is BROKEN, and it is broken
+in the direction that ships a silent bed: the mix also contains the VO, so it towers
+over the SFX track whether or not the music is there. Measured: that check reported
+every diegetic moment healthy while the music was inaudible to the user. Replace it
+with a differential:
+
+1. Render the mix twice, identical except `volume=<music>` vs `volume=0.0001`.
+2. Compare per-half-second RMS: `delta = 20*log10(with/without)`.
+3. **The music is present only if the mean delta is >= 2dB** (a shipped, approved
+   mix measured +4.6dB mean, +24.7dB peak). Anything under ~1dB is a silent bed
+   whatever the LUFS says.
+
+A single number from the mix alone can never prove a bed is audible. Only the
+difference between two renders can.
 
 Measured failure mode: continuous narration DRIFTS — speech runs ~2.5s per idea while
 beats run 4s, so by mid-film every line lands one beat early ("your skin" over the
@@ -164,10 +191,36 @@ QA per beat: every named `ambience` sound must be audible over the bed at its
 moment — a click, a plink and a mist hiss that exist in the track but cannot be
 heard did not happen.
 
+**5d-bis. A live insect leaving the product, and the class of error it belongs to.**
+Measured on the bug-zapper run: at 0:12 a mosquito flew OUT of the racket's mesh and
+away, alive — the exact inverse of the product's promise, in a beat QA scored clean.
+No metric catches this: luminance, motion, end states and the box sheet all passed.
+Only watching does. Add to the eye pass a per-beat question: **does anything on
+screen argue AGAINST the product?** A bug escaping a zapper, a spill near a cleaner,
+a crease in a wrinkle remover.
+
+The fix is free and it is a TRIM, but the trim has one rule: **excise to a real
+scene-detect boundary, not to the offending frame.** Cutting 12.55-14.04 (out-point =
+the film's own cut) reads as an ordinary cut; cutting 12.55-13.65 would have left a
+jump inside a static shot. Then keep sync by time-compressing the VO and music by
+`old_duration / new_duration` (1.05 here, inaudible on speech) rather than shifting
+or re-cutting the read, and re-measure the word times: the run kept 6/7 lines inside
+their beat with the 7th leading its beat by 0.34s, which is correct lead-bias.
+
 **5e. A content-checker refusal never dumbs the brief down.** Change the flagged
 word, keep every specific musical instruction. Measured trap: the word "bed" in a
 track TITLE drew two refusals, and the retry that also simplified the prompt
 produced the generic track that failed review. Fix the word, not the ambition.
+
+**5e-bis. But first check it is not the trackCount (measured 17.8).** Six music
+refusals on one run were NOT about wording: `trackCount: 3` was refused with a
+1,300-char brief, a 400-char brief and a 120-char brief alike, while the SAME full
+brief at `trackCount: 1` passed. The filter is also intermittent — of three
+single-track calls with equally innocuous prompts, one passed and two were refused.
+So: **generate candidates as N separate `trackCount: 1` calls, and retry a refusal
+once with a fresh idempotencyKey before touching a single word.** Rewriting the
+brief in response to a refusal that had nothing to do with the brief is how a run
+loses its derived music and ships wallpaper. Refusals are free; retries are cheap.
 
 Mechanics: `generate_project_audio` via `search_capabilities` with the master's
 projectId; VO text = `audio.vo_script_for_post`, voice/language from `audio.vo_tone`.

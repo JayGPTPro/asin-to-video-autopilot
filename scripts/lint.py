@@ -16,19 +16,25 @@ SLOW_WORDS = re.compile(r"\b(slowly|slow|unhurried|leisurely|lingers?|drifts?)\b
 # Loose shine language is how glitter artifacts get invited (measured: "catching the
 # lamp in moving bands of shine" put sparkles in a woman's hair). Shine must be a
 # surface property (glossy, sheen, gleam ON something), never free-floating light.
-SPARKLE_BAIT = re.compile(r"\bcatch(?:es|ing)? the (?:\w+ ){0,2}(?:light|lamp|sun)\b|shimmer\w*|sparkl\w*|glitter\w*|dancing light", re.I)
+SPARKLE_BAIT = re.compile(r"\bcatch(?:es|ing)? the (?:\w+ ){0,2}(?:light|lamp|sun)\b|shimmer\w*|sparkl(?!ing\s+(?:water|wine|juice|cider|lemonade))\w*|glitter\w*|dancing light", re.I)
 DESIGN = re.compile(r"#[0-9a-fA-F]{6}\b|\bfonts?\b|\btypefaces?\b|\bpantone\b|\bcolou?r palette\b", re.I)
 NUMBER_WORDS = r"(?:two|three|four|five|six|seven|eight|nine|ten|\d+)"
 # A group beat that implies SIMULTANEOUS handlers renders SEVERAL products
 # (measured: "the football snaps around it ... quick low passes" rendered two
 # footballs at once past an explicit uniqueness line and a no-second-ball line).
+# Verb set = the true throw/pass class only; "goes"/"moves" are ordinary
+# locomotion and false-positive on a person carrying the product around a room.
+# Person words match plurals and the bare "circle" — the measured sentence was
+# "snaps around the circle, quick low hand-offs between friends" and the old
+# singular-only, "circle of"-only pattern missed it (adversarial review, 17.8).
 DISTRIBUTION = re.compile(
-    r"\b(?:snaps?|passes?|pass|flies|fly|whips?|zips?|goes|moves?|bounces?)\s+"
-    r"(?:around|between|among|across the (?:circle|group))\b"
+    r"\b(?:snaps?|passes?|pass|flies|fly|whips?|zips?|bounces?|toss(?:es)?)\s+"
+    r"(?:it\s+|around|between|among|across)"
     r"|\bto\s+(?:the\s+)?\w+\s+to\s+(?:the\s+)?\w+\b", re.I)
 PERSON_WORDS = re.compile(
-    r"\b(?:man|woman|boy|girl|kid|teen|friend|player|brother|sister|father|mother|"
-    r"guy|everyone|group|circle of|the four|the three)\b", re.I)
+    r"\b(?:man|men|woman|women|boys?|girls?|kids?|teens?|friends?|players?|"
+    r"brothers?|sisters?|father|mother|guys?|everyone|group|team|circle|"
+    r"the four|the three)\b", re.I)
 SINGLE_OBJECT = re.compile(r"same single|one object|never two|hand to hand|one continuous path", re.I)
 
 

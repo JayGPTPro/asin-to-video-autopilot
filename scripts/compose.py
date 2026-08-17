@@ -49,12 +49,21 @@ def negative(text):
 
 
 def reference_lines(references, when):
+    """Image and video references are passed to the provider as SEPARATE arrays,
+    so they carry separate 1-based numbering and separate tags. Labelling a video
+    '@Image 6' points the model at an image slot that holds something else."""
     lines = []
-    for i, ref in enumerate(references or [], start=1):
+    n_img = n_vid = 0
+    for ref in references or []:
         role = (ref.get("role") or "").strip().rstrip(".")
-        tag = f"@Image {i}"
         spans = [when[b] for b in ref.get("serves") or [] if b in when]
         at = f" It applies to the shot at {', '.join(spans)}." if spans else ""
+        if ref.get("kind") == "video":
+            n_vid += 1
+            lines.append(f"@Video {n_vid} defines {role or 'the motion'}.{at}")
+            continue
+        n_img += 1
+        tag = f"@Image {n_img}"
         if ref.get("kind") == "product":
             lines.append(f"{tag} defines the product: {role or 'the exact product'}. "
                          "Match it exactly wherever the product appears.")
