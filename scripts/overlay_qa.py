@@ -123,8 +123,10 @@ def parse_supers(html):
         for tier in ("hero", "line", "kicker"):
             if tier not in classes.split() and re.search(rf'class="[^"]*\b{tier}\b', inner):
                 classes += f" {tier}"
+        inner_ids = re.findall(r'id="([^"]+)"', inner)
         sups.append({
             "id": attr("id", "?"),
+            "ids": [attr("id", "?")] + inner_ids,
             "start": float(attr("data-start", "0")),
             "dur": float(attr("data-duration", "0")),
             "vo": attr("data-vo"),
@@ -309,6 +311,35 @@ def main():
             if dies_after and not clean_before:
                 fails.append(f"CUT: {s['id']} ends {s_end - c:.2f}s after the cut at "
                              f"{c:.2f}s — die ≥2 frames before the cut, or live ≥1s past it")
+
+    # 9. CHOREOGRAPHY — a bare fade shipped once and read as "too simple".
+    # Every super is a BUILD: entrance + hold motion + exit = at least 3
+    # timeline references, and at least one NAMED lib.js build (or a
+    # hand-rolled per-glyph/word rise, which is what hero stacks use).
+    LIB_BUILDS = re.compile(
+        r"\b(letterRise|wordRise|ramIn|wordPop|bounceRise|maskReveal|ruleDraw|"
+        r"slabLand|counterRoll|drift|microShake|gentleSway|quietFade|"
+        r"directionalSlide|popOut)\s*\(")
+    script_m = re.search(r"<script>(?![^<]*src)(.*?)</script>", html, re.S)
+    script = script_m.group(1) if script_m else ""
+    for s_ in sups:
+        refs = sum(script.count(f'"#{i}') + script.count(f"'#{i}") for i in s_["ids"])
+        sel_alts = "|".join(re.escape(i) for i in s_["ids"])
+        named = bool(re.search(
+            LIB_BUILDS.pattern.rstrip("\\s*\\(") + rf"\s*\(\s*tl\s*,\s*[\"']#({sel_alts})\b",
+            script))
+        glyph = bool(re.search(rf"#({sel_alts})\s+\.(g|w)\b", script))
+        label = f"{s_['id']} \"{s_['text'][:28]}\""
+        if refs < 3:
+            fails.append(f"CHOREOGRAPHY: {label} has only {refs} timeline references — "
+                         f"a super is a BUILD (entrance + hold motion + exit), never a bare fade")
+        if not (named or glyph):
+            fails.append(f"CHOREOGRAPHY: {label} uses no named lib.js build and no "
+                         f"per-glyph/word motion — improvised tweens are how 'too simple' ships")
+        if "hero" in s_["classes"].split() and not (glyph or
+                re.search(rf"maskReveal\s*\(\s*tl\s*,\s*[\"']#({sel_alts})", script)):
+            fails.append(f"CHOREOGRAPHY: {label} is HERO tier without a reveal or "
+                         f"per-glyph build — the hero moment gets the full treatment")
 
     # 7. HIERARCHY + 8. DISTRIBUTION — checks on the SET, not the super
     if len(sups) >= 2:

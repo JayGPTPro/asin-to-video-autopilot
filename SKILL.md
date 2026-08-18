@@ -115,7 +115,15 @@ Stage-by-stage detail lives in `references/` (see the map below). The shape:
    Only then spend. Whatever is left unfixed goes in the report by class, so the
    person knows what they are looking at.
 10. **Post audio** — derived, auditioned, measured (`references/genrupt-flow.md`
-    §5a-5e). **Build the mix with `scripts/mix_audio.py`, never by hand**: it
+    §5a-5e). **The VO read is FINALIZED after the locked cut** (the brief's
+    script is a planning draft; revise it against the real beats before
+    generating), placed as AT MOST 4 blocks cut only at sentence boundaries,
+    and gated by `scripts/vo_qa.py <placed_vo> <film_seconds>` — no robotic
+    holes, no dead air over 5s, narration present in every quarter
+    (genrupt-flow §5c-bis; the flow rule used to contradict itself across two
+    files and each run picked one at random, which is why some films flowed
+    and some were full of silences). **Build the mix with
+    `scripts/mix_audio.py`, never by hand**: it
     derives the music gain from the measured VO and music levels and then proves
     the bed is audible by rendering the mix twice, with and against music muted,
     and comparing. It exits 1 on a buried bed. A hand-written ffmpeg line has
@@ -158,6 +166,24 @@ Stage-by-stage detail lives in `references/` (see the map below). The shape:
 13. **Conform + report** — 1280x720, 24fps, final mute-watch pass. Write the run
     report (`scripts/report.py`): every decision, measurement, and dollar, with
     the final film, the audio alternates and the style card embedded as players.
+
+    **THE DELIVERY LAYOUT — one file is the answer.** The person asked for a
+    video, and a folder where the finished film hides among mixes and takes is
+    a failure of the delivery, not a bonus. The run folder ends EXACTLY like
+    this, and report.py enforces it (it refuses to write the report over a
+    messy out/):
+
+    ```
+    out/FINAL-<slug>.mp4     <- the film. The ONLY mp4 at out/ root.
+    out/extras/              <- ALT audio takes, the style card. Optional depth.
+    out/report.html          <- the receipt, players for FINAL and extras.
+    work/                    <- every intermediate: composites, mixes, masks,
+                                probe, trimmed segments. Never shown, safe to
+                                delete after delivery.
+    ```
+
+    When you hand the result to the user, hand ONE path: `out/FINAL-<slug>.mp4`.
+    Mention the report; never list the intermediates.
 
 ## Policy gate: the video must survive Amazon
 

@@ -70,8 +70,29 @@ def main(run_dir):
 
     out_dir = run / "out"
     finals = sorted(out_dir.glob("FINAL*.mp4")) if out_dir.exists() else []
-    alts = sorted(out_dir.glob("ALT*.mp4")) if out_dir.exists() else []
-    cards = sorted(out_dir.glob("style-card*.mp4")) if out_dir.exists() else []
+    extras_dir = out_dir / "extras"
+    alts = sorted(extras_dir.glob("ALT*.mp4")) if extras_dir.exists() else []
+    cards = sorted(extras_dir.glob("style-card*.mp4")) if extras_dir.exists() else []
+
+    # THE DELIVERY LAYOUT (SKILL.md stage 13): out/ root holds exactly ONE mp4,
+    # the final. Alternates and cards live in out/extras/, intermediates in
+    # work/. A user opening the folder must never have to guess which file is
+    # the film — that guess shipped once and the feedback was "which one is
+    # the real one?"
+    stray = [p for p in (out_dir.glob("*.mp4") if out_dir.exists() else [])
+             if p not in finals]
+    problems = []
+    if len(finals) != 1:
+        problems.append(f"expected exactly 1 FINAL-*.mp4 at out/ root, found "
+                        f"{len(finals)}: {[f.name for f in finals]}")
+    if stray:
+        problems.append(f"non-FINAL mp4s at out/ root (move to out/extras/ or "
+                        f"work/): {[p.name for p in stray]}")
+    if problems:
+        print("DELIVERY LAYOUT VIOLATION — fix out/ before writing the report:")
+        for x in problems:
+            print("  -", x)
+        sys.exit(1)
 
     hero_html = video_tag(finals[0], run) if finals else "<p>No final film yet.</p>"
     alts_html = "".join(

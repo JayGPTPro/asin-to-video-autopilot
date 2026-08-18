@@ -171,17 +171,34 @@ with a differential:
 A single number from the mix alone can never prove a bed is audible. Only the
 difference between two renders can.
 
-Measured failure mode: continuous narration DRIFTS — speech runs ~2.5s per idea while
-beats run 4s, so by mid-film every line lands one beat early ("your skin" over the
-hair shot). Two rules that fix it:
-- **Script budget: spoken words fill at most ~80% of the runtime**, with air written
-  in (especially around the freeze and the close). A wall-to-wall script cannot stay
-  in sync and reads as "does not flow".
-- **Place the VO as SEGMENTS, not one file**: cut the track at measured word
-  boundaries and delay each line onto its beat (ffmpeg atrim + adelay). A line may
-  bridge a cut by a few tenths — that is normal ad grammar — but a line a whole beat
-  away is a failure. Cutting a redundant line (a tagline the label already carries)
-  to buy air is always allowed.
+**5c-bis. THE FLOW DOCTRINE — one rule, because two contradictory ones shipped
+choppy reads.** This file used to say "place the VO as SEGMENTS, one line per
+beat" while the taste gate said "never chop a continuous read" — and each run
+picked one at random, which is exactly why some films flow and some are full of
+dead holes. The unified rule:
+
+1. **The read is FINALIZED after the locked cut, not before.** The brief's
+   vo_script_for_post is a planning draft. Once the master is QA'd and its true
+   cut times are known, REVISE the script against the real beats (which claims
+   land where, what got trimmed) and only then generate the read. A read
+   recorded against an imagined film is why narration feels pasted on.
+2. **Script budget: spoken words fill 55-80% of the runtime**, with air written
+   in around the freeze and the close. Wall-to-wall cannot stay in sync.
+3. **Generate 2 takes of ONE continuous read** and pick by whisper gap profile
+   (no intra-phrase hole over ~0.9s).
+4. **Place the pick as AT MOST 4 BLOCKS** (hook / body / body / close), cutting
+   ONLY at sentence boundaries. Inside a block the read is untouched — the
+   pauses inside it are the narrator's own breathing and they are what "flows"
+   sounds like. If block placement cannot reach sync, buy a re-paced read
+   (~USD 0.12) instead of a fifth cut. A line may bridge a beat boundary by a
+   few tenths; a line a whole beat from its picture is the failure.
+5. **Gate it: `python3 scripts/vo_qa.py <placed_vo.wav> <film_seconds>`** —
+   blocks ≤ 4, no hole inside a block over 0.9s, no gap between blocks over
+   5s, one spoken word in every quarter of the film, speech coverage 50-85%,
+   and the last word inside the final quarter. It exits 1 with the finding;
+   a failing layout gets re-spaced or re-paced, never shipped.
+   The gaps BETWEEN blocks are musical, not dead, because mix_audio.py has
+   already proven the bed is audible there — the two gates only work together.
 
 **5d. The mix hierarchy: SFX are the realism layer.** The diegetic track is what
 makes the picture feel real, and it is the layer that cannot be rebuilt — it sits
