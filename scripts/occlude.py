@@ -84,6 +84,11 @@ def main():
     ap.add_argument("--engine", choices=["rembg", "vision", "auto"], default="auto")
     ap.add_argument("--feather", type=float, default=1.6)
     ap.add_argument("--fps", type=int, default=24)
+    # 0.35: a shipped, approved occlusion measured ~20% hidden and still read
+    # cleanly; the one that failed review measured well past half.
+    ap.add_argument("--max-hidden", type=float, default=0.35,
+                    help="fail if the subject hides more than this fraction of the "
+                         "super's glyph pixels (default 0.35)")
     a = ap.parse_args()
 
     engine = a.engine
@@ -163,10 +168,66 @@ def main():
                         "-map", "0:v", "-map", "1:a?",
                         "-c:v", "copy", "-c:a", "copy", a.out], check=True)
 
-        # verify the weld: motion must exist INSIDE the occluded window and
-        # the total duration must match the composite within 2 frames
+        # ── THE LEGIBILITY GATE ──────────────────────────────────────────
+        # Measured failure (17.8, MaryRuth's): the subject was punched over a
+        # hero super and the line "A pour, not a pill" reached the customer as
+        # "ur, / a ill". Every other check had passed — overlay_qa measures
+        # contrast, reading time, sync and breath on the PRE-occlusion render,
+        # and the verify below only asks whether the window still moves. Nothing
+        # asked the one question that decides whether the super did its job:
+        # can you still READ it.
+        #
+        # Occlusion is only the expensive move while the line survives it. Past
+        # roughly a third of its glyph pixels it stops reading as depth and
+        # starts reading as a bug, so this gate is hard: it fails the run rather
+        # than shipping a sentence in pieces.
         import numpy as np
         from PIL import Image
+
+        def _samples(v, n, name):
+            d = td / name
+            d.mkdir(exist_ok=True)
+            step = max(1, nseg // n)
+            subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(v),
+                            "-vf", f"select='not(mod(n\\,{step}))'", "-vsync", "0",
+                            "-frames:v", str(n), str(d / "s%03d.png")], check=True)
+            return sorted(d.glob("s*.png"))
+
+        N = 8
+        hidden = []
+        for c, p, o in zip(_samples(comp_seg, N, "sc"),
+                           _samples(plate_seg, N, "sp"),
+                           _samples(seg, N, "so")):
+            C = np.asarray(Image.open(c).convert("RGB"), dtype=float)
+            P = np.asarray(Image.open(p).convert("RGB"), dtype=float)
+            O = np.asarray(Image.open(o).convert("RGB"), dtype=float)
+            # the type IS whatever the composite added on top of the plate
+            text = np.abs(C - P).mean(axis=2) > 12
+            if text.sum() < 200:        # no type up in this frame; nothing to judge
+                continue
+            survived = text & (np.abs(O - P).mean(axis=2) > 12)
+            hidden.append(1.0 - survived.sum() / text.sum())
+        if hidden:
+            mean_hidden, worst = float(np.mean(hidden)), float(np.max(hidden))
+            print(f"legibility: {mean_hidden:.0%} of the type hidden on average, "
+                  f"{worst:.0%} at worst (budget {a.max_hidden:.0%})")
+            if mean_hidden > a.max_hidden:
+                # Delete the artifact before failing. The weld already wrote a
+                # plausible-looking mp4, and a refused run that leaves a finished
+                # file on disk is how the broken version gets picked up later.
+                Path(a.out).unlink(missing_ok=True)
+                sys.exit(
+                    f"OCCLUSION REFUSED: the subject hides {mean_hidden:.0%} of this "
+                    f"super's glyphs (budget {a.max_hidden:.0%}). The reader gets "
+                    "fragments, not a sentence. No output was written. Move the super "
+                    "into the measured clean band for its window, shrink it to the "
+                    "largest size that band can host, or drop the occlusion for this "
+                    "film — an unreadable line is worth less than no effect at all.")
+        else:
+            print("legibility: no type inside the window — nothing was occluded")
+
+        # verify the weld: motion must exist INSIDE the occluded window and
+        # the total duration must match the composite within 2 frames
         def _grab(v, t, name):
             p = td / name
             subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-ss", f"{t:.3f}",

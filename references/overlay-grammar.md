@@ -55,6 +55,23 @@ architecture makes structurally impossible.
    or a hand. Measure the silhouette per SHOT, sampled across the super's whole
    window (subjects move inside a shot).
 
+**Law 1 answers to law 2: MEASURE THE ROOM BEFORE YOU PICK THE SIZE.** The theme's
+hero size is an aspiration, not a promise the footage can keep. Run
+`scripts/deadspace.py <film> --from T0 --to T1 --lines "A pour,|not a pill"`: it
+unions the busy pixels across the whole window, finds the largest rectangle that
+stays clean, and prints the biggest type that fits it. Measured (17.8, MaryRuth's):
+the theme asked for 150px and the film's roomiest window held 430x370px of clean
+background. Only two outcomes exist when the tier does not fit, and both are bugs —
+the super sits on a person, or it gets occluded into fragments. **Shrinking the tier
+to the film's real dead space is the fix; 90/58/50 still reads as a clear
+hierarchy.** A tight film simply has a smaller hero, and that is not a compromise:
+text nobody can read has no tier at all.
+
+The tool's thresholds are calibrated against regions known to be good and known to
+be busy, and it is deliberately CONSERVATIVE — it will never tell you an oversized
+number is safe. Defocused background that drifts under a moving camera is not busy;
+that is exactly where type belongs. A hard edge is.
+
 ## Placement and motion intelligence
 
 - **Ink adapts to the zone like ink to paper**: `ink-light` (theme cream) on dark
@@ -117,6 +134,19 @@ the frame at hero scale, and the person/product occludes it
   subject exactly because the subject wins. Mark it in the HTML with a comment
   and check the effect by eye in the final (the subject's face must sit ON TOP
   of the letters).
+- **THE LEGIBILITY BUDGET: at most ~35% of the glyphs may be hidden, and
+  occlude.py now measures it and REFUSES past the budget.** Measured failure
+  (17.8, MaryRuth's): the subject was punched over "A pour, not a pill" and the
+  customer received "ur, / a ill" — 63% of the type hidden on average, 84% at
+  worst. Every other check passed, because they all run on the PRE-occlusion
+  render: contrast, reading time, VO sync and breath were all measured on text
+  that was about to be covered up, and the occlusion verify only asked whether
+  the window still moved. **Exemption from the dead-space law was never
+  exemption from being readable**, and nothing in the pipeline was asking the
+  only question that decides whether the super did its job.
+  The gate is hard, it deletes its own output on failure, and a shipped
+  occlusion that read well measured ~7-20% hidden. When it refuses, the fix is
+  placement or size, never a bigger budget.
 - Mask only the super's window, never the whole film. ~1.4s/frame with rembg;
   the macOS Vision engine (auto-detected) is ~8x faster.
 - occlude.py self-verifies: it FAILS if the occluded window comes out frozen
