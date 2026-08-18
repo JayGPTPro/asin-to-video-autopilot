@@ -128,14 +128,22 @@ Stage-by-stage detail lives in `references/` (see the map below). The shape:
 11. **Overlays — the theme kit** (`references/overlay-grammar.md`). Pick ONE theme
     from `overlays/themes/` (five registers incl. condensed-editorial), lock its
     palette from the product's own label (`scripts/theme_extract.py`) and **cap
-    the ink to the plate's highlight** (`scripts/integrate.py measure`), build
-    from `overlays/template.html` + `lib.js` with EMBEDDED fonts, and QA with
-    `scripts/overlay_qa.py` (theme lock, contrast, STILL-time reading, cut
-    adjacency, lead-biased VO sync, breath, hierarchy, anchor-group
+    the ink to the plate's highlight** (`scripts/integrate.py measure`).
+    **MEASURE THE ROOM BEFORE YOU PICK A SIZE**: `scripts/deadspace.py <film>
+    --from T0 --to T1 --lines "line one|line two"` returns the largest rectangle
+    that stays clean across the WHOLE window and the biggest type that fits it.
+    The theme's hero size is an aspiration; the footage decides. Measured: a
+    theme asked for 150px where the roomiest window held 430x370, and the two
+    ways that ends are both bugs — type on a person, or type occluded into
+    fragments. Build from `overlays/template.html` + `lib.js` with EMBEDDED
+    fonts, and QA with `scripts/overlay_qa.py` (theme lock, contrast, STILL-time
+    reading, cut adjacency, lead-biased VO sync, breath, hierarchy, anchor-group
     distribution) — FAIL blocks the composite. LOOK at `qa/overlay-boxes/`:
     a box on a face/product/label is a reposition, EXCEPT the one occluded
     hero super, where the subject wins by construction. After the composite:
-    **one occlusion moment** (`scripts/occlude.py`) and **matched grain**
+    **one occlusion moment** (`scripts/occlude.py`, which REFUSES and deletes
+    its output if the subject hides more than ~35% of the glyphs — measured: a
+    hero line reached the customer as "ur, / a ill") and **matched grain**
     (`integrate.py grain`). Sizes meet Amazon's 50pt/720p floor. **Brand
     marks: real or absent** (taste.md §4b).
 12. **THE AUDIO TASTE GATE.** Audio is the one layer meters cannot judge: every
@@ -220,7 +228,7 @@ variant per the rule above).
 | `references/overlay-grammar.md` | The text system: theme kit, choreography library, overlay QA |
 | `references/amazon-video-policy.md` | What Amazon rejects — checked before any credit moves |
 | `overlays/` | themes/, template.html, lib.js, embedded fonts.css |
-| `scripts/` | compose, lint, prep_refs, qa, overlay_qa, theme_extract, policy_check, mix_audio, report |
+| `scripts/` | compose, lint, prep_refs, qa, deadspace, overlay_qa, theme_extract, policy_check, occlude, mix_audio, report |
 
 Every stage above is runnable; the rules were paid for on real productions (two full
 acceptance-grade runs, five review rounds). Do not improvise around a rule — the
