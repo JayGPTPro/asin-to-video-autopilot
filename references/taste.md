@@ -123,6 +123,23 @@ her hair, completely unnatural"). Rules:
   particles, lens flares or magical light effects"); a brief that truly wants
   particles opts out with `allow_particles: true` and a written reason.
 
+## 5c. A face never lives in a reflection
+
+Measured 18.8 on B0DQVDVBBM: the brief put the woman's face in the mirror floor of the
+pan ("her face travels upside-down through the mirror beneath the lens"). Seedance
+SWAPPED the physics. It rendered the real woman above the rim upside down and her
+reflection inside the pan right way up. Two viewers read it the same way: not a mirror,
+a broken person. A Gemini Omni edit asked to invert it back changed nothing; the model
+does not reason about mirror geometry.
+
+- A mirror beat reflects OBJECTS and LIGHT: the window, the ceiling line, the bowl, the
+  product, the food falling in. Those the model gets right, and they prove the finish
+  just as well.
+- If a person has to be in a mirror beat, they are hands and forearms. No head, no face,
+  not in the picture and not in the reflection.
+- This is a beat-level ban, not a film-level one. Faces stay ON everywhere else
+  (rule 3); the reflection is the one place they break.
+
 ## 6. Mood: declared up front, in numbers
 
 Mood is PICTURE, not post. An undeclared mood lets the model choose night, and every
@@ -150,6 +167,25 @@ The model renders exactly the tempo you describe. Measured: a rejected draft car
 - Every action COMPLETES inside its own beat.
 - Write "real time, no slow motion" into camera lines by default; slow motion is
   spent ONLY on the signature shot or the close.
+
+### 7a. The cut rhythm has to VARY. A uniform grid is the boring film
+
+Measured 18.8 on B0DQVDVBBM: the plan was 4/6/4/4/4/4/4 and the render came back
+3.79 / 4.75 / 4.17 / 4.08 / 4.33 / 3.83 / 3.96, standard deviation 0.33s. Every check
+passed. Jay watched it and said the pace was very boring, and he was right: seven shots
+of the same length is a slideshow, not an edit. The damage does not stop at the
+picture. The music brief derives its tempo from the cut rhythm, so a 4-second grid
+wrote itself a 60 BPM bed with "nothing showy" in it, and the film ended up asking for
+the boring music it then got.
+
+The plan must satisfy all three, and the lint refuses it otherwise:
+- At most TWO shots share the same planned length.
+- At least one accent shot of 2 or 3 seconds, and at least one held shot of 5 or more.
+- longest / shortest >= 2.0.
+
+Seedance compresses the spread it is given (planned 4/6 came back 3.8/4.8), so plan a
+WIDER spread than the one you want to watch. A rhythm that reads on screen starts life
+on paper as something like 3 / 6 / 3 / 4 / 2 / 5 / 4.
 
 ## 8. Seedance cannot count
 

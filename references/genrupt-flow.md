@@ -105,13 +105,29 @@ flow" because the music was briefed generically and one candidate was accepted b
 The process that replaces it:
 
 **5a. The music brief is DERIVED from the film, never generic.**
-Build it from three film facts: the register (energy/desire/calm), the cut rhythm
-(average beat length in seconds → name a tempo whose bar lands on it: 4s beats →
-60 or 120 BPM so musical phrases land near cuts), and the film's ENERGY CURVE named
+Build it from three film facts: the register (energy/desire/calm), a TEMPO, and the
+film's ENERGY CURVE named
 beat by beat ("rises with the hook, suspends and empties out during the frozen hero
 beat, grooves through the four use beats, resolves warm on the close"). Write that
 curve INTO the promptRequest with rough second marks. A bed that ignores the film is
 wallpaper; wallpaper is what failed.
+
+**5a-tempo. The tempo comes from the REGISTER, never from the cut grid.**
+This paragraph used to say "4s beats → 60 or 120 BPM so phrases land near cuts", and
+on 18.8 that arithmetic wrote a real film a 60 BPM felt-piano bed with "nothing showy"
+in it, off a shot plan that was 4/6/4/4/4/4/4. Jay's verdict on the delivery was that
+the music and the pace were very boring, and both came from the same line of maths.
+A cut grid is a symptom of the plan (see taste 7a, which now refuses a flat one); it
+is not a musical instruction.
+
+- Tempo floor is **85 BPM** unless the brief argues in writing for slower, and calm
+  register does NOT count as that argument: calm is an instrument and arrangement
+  choice (felt piano, brushes, upright bass), not a slow tempo.
+- Never write "a bar must land every N seconds" into a music prompt. Ask instead for
+  one lift and one resolve, placed at second marks taken from the energy curve.
+- The bed is mixed 4 dB under the voice, not 6, when the film has fewer than ~8 words
+  of VO per beat: measured 18.8, a mix that passed the audibility gate at +3.4 dB
+  still came back as "you can barely hear the music".
 
 **5a-ter. A music refusal is a COIN FLIP, not a verdict on your brief — retry it.**
 Measured 18.8: Seed Audio `audioMode: "music"` returned `Content Policy Violation`

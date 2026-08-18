@@ -8,6 +8,7 @@ warnings print and continue. Usage: python3 lint.py <run_dir>
 import json
 import re
 import sys
+from collections import Counter
 from pathlib import Path
 
 SLOTS = ["hook", "hero", "use1", "use2", "use3", "use4", "close"]
@@ -91,6 +92,30 @@ def lint(run_dir):
                       "impossible camera move")
     elif (sig.get("beat") or "hero") == "hook":
         errors.append("the signature shot goes on the hero beat, not the hook")
+
+    # ── rhythm: a uniform grid is the boring film (taste 7a) ────────
+    # Measured 18.8 on B0DQVDVBBM: a 4/6/4/4/4/4/4 plan came back as seven shots
+    # between 3.79s and 4.75s and read as a slideshow. The damage spread: the
+    # music brief derives tempo from the cut rhythm, so the same flat grid wrote
+    # itself a 60 BPM bed. Every other check passed.
+    plan_secs = [s.get("seconds") for s in shots
+                 if isinstance(s.get("seconds"), (int, float)) and s.get("seconds") > 0]
+    if len(plan_secs) >= 5:
+        repeated = sorted(n for n, c in Counter(plan_secs).items() if c > 2)
+        if repeated:
+            errors.append(f"shot rhythm: {repeated} used more than twice — at most two "
+                          "shots share a length (taste 7a)")
+        if not any(x <= 3 for x in plan_secs):
+            errors.append("shot rhythm: no accent beat — the plan needs at least one "
+                          "shot of 2 or 3 seconds")
+        if not any(x >= 5 for x in plan_secs):
+            errors.append("shot rhythm: no held beat — the plan needs at least one shot "
+                          "of 5 seconds or more")
+        if max(plan_secs) / min(plan_secs) < 2.0:
+            errors.append(f"shot rhythm: longest/shortest is "
+                          f"{max(plan_secs) / min(plan_secs):.2f}, under 2.0. Seedance "
+                          "compresses the spread it is given, so plan wider than the "
+                          "rhythm you want to watch")
 
     # ── beats ───────────────────────────────────────────────────────
     noun = (brief.get("product_noun") or "").strip()
