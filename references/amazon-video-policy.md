@@ -47,7 +47,7 @@ proof it needs, and the run keeps the line only if the listing carries the proof
 
 ## AI disclosure — where it stands, and what this skill does
 
-Raised by an outside reviewer, 18.8: "if using people, do we need an AI warning?"
+Raised by an outside reviewer: if the film uses people, does it need an AI warning?
 Worth answering precisely, because the answer differs by surface and it is easy to
 either over-comply with a label nobody asks for or under-comply in the EU.
 

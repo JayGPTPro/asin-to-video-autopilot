@@ -42,7 +42,7 @@
     {
       "id": "S3",
       "slot": "use1",
-      "seconds": 4,
+      "seconds": 3,
       "camera": {
         "size": "CLOSE",
         "move": "static shot on an 85mm prime, real time"
@@ -61,7 +61,7 @@
     {
       "id": "S4",
       "slot": "use2",
-      "seconds": 4,
+      "seconds": 2,
       "camera": {
         "size": "MEDIUM",
         "move": "handoff tracking on a 50mm: the camera follows the lantern from the father's hand up to the tent hook, starting at the table and ending inside the tent"
@@ -81,7 +81,7 @@
     {
       "id": "S5",
       "slot": "use3",
-      "seconds": 4,
+      "seconds": 5,
       "camera": {
         "size": "CLOSE-UP",
         "move": "rack focus on a 100mm macro: shift focus from the dial in the foreground to the hiker's face behind it; the dial blurs as her face sharpens"
@@ -117,7 +117,7 @@
     {
       "id": "S7",
       "slot": "close",
-      "seconds": 4,
+      "seconds": 6,
       "camera": {
         "size": "MEDIUM",
         "move": "slow pull-back mirroring the hook's push-in, the one held beat of the film, gentle slow motion allowed"

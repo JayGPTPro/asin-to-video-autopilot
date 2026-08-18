@@ -169,7 +169,7 @@ def main():
                         "-c:v", "copy", "-c:a", "copy", a.out], check=True)
 
         # ── THE LEGIBILITY GATE ──────────────────────────────────────────
-        # Measured failure (17.8, MaryRuth's): the subject was punched over a
+        # Measured failure on a liquid-supplement film: the subject was punched over a
         # hero super and the line "A pour, not a pill" reached the customer as
         # "ur, / a ill". Every other check had passed — overlay_qa measures
         # contrast, reading time, sync and breath on the PRE-occlusion render,

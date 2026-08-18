@@ -76,5 +76,13 @@ def main(spec_path):
               + ("  (upscaled to clear the 300px floor)" if min(w, h) == MIN_DIM else ""))
 
 
+def _usage(min_args):
+    """A missing argument prints the script's own usage, never a traceback.
+    These scripts are read and run by hand as often as by the agent."""
+    if len(sys.argv) <= min_args:
+        print((__doc__ or "").strip() or f"usage: {sys.argv[0]} <args>")
+        sys.exit(2)
+
 if __name__ == "__main__":
+    _usage(1)
     main(sys.argv[1])

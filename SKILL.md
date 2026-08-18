@@ -43,7 +43,8 @@ because it is free and it happens before the money.
 - **BEFORE every paid action, check headroom against its WORST CASE cost, not its
   hoped-for cost.** If `running_total + worst_case > cap`, stop and ask. This is the
   only mid-run stop that exists.
-- Typical run: probe ~USD 0.55, master 30s ~USD 8-9, audio (see below), leaving
+- Typical run: probe ~USD 0.65, master 30s ~USD 9.80, audio ~USD 1 for a few
+  candidates, so about USD 11-12 all in, leaving
   headroom for at most ONE autonomous fix. A second failure is written to the report
   with recommendations; it never spends more.
 
@@ -85,12 +86,17 @@ Stage-by-stage detail lives in `references/` (see the map below). The shape:
 2. **Taste decisions** — apply `references/taste.md`: emotion/features center of
    gravity, mood band with a target luminance range, the signature camera move, cast
    diversity plan, the final image. Log every decision + its reason for the report.
-3. **Brief + shot plan** — the 7-beat listing template, **summing to 30 seconds**:
-   hook 4s, hero 6s (the signature shot), four distinct use beats at 4s, close 4s.
-   30 is the model's ceiling and the beats must USE it: an earlier template stopped at
-   27s because it reserved 3s for a post-production CTA card this skill does not make,
-   which quietly threw away three seconds of paid runtime. A close that rhymes with the
-   hook, and end states on every fragile beat.
+3. **Brief + shot plan** — the 7-beat listing template, **summing to 30 seconds** with
+   a rhythm that VARIES: hook 4s, hero 6s (the signature shot), then 3 / 2 / 5 / 4, close
+   6s. The old template was 4/6/4/4/4/4/4 and it shipped a film a viewer called boring
+   before anything else about it: seven shots of one length is a slideshow, and the music
+   brief, which reads the cut rhythm, then wrote itself a 60 BPM bed to match. taste.md
+   7a states the law and the lint enforces it (at most two shots of a length, one accent
+   of 2-3s, one held beat of 5s+, longest/shortest ≥ 2.0). 30 is the model's ceiling and
+   the beats must USE it: an earlier template stopped at 27s because it reserved 3s for a
+   post-production CTA card this skill does not make, which quietly threw away three
+   seconds of paid runtime. A close that rhymes with the hook, and end states on every
+   fragile beat.
 4. **Compose + lint** — `scripts/compose.py` + `scripts/lint.py`. The lint gate is
    hard: density, slow words, end states, reference roles with USE/DO-NOT-USE,
    design silence, character budget. Never hand-write the master prompt.
@@ -172,7 +178,8 @@ Stage-by-stage detail lives in `references/` (see the map below). The shape:
     about $0.12. Each brief names a hummable hook, one structural event on a named
     second, and one texture that is wrong for the category (`genrupt-flow`
     5a-brief) — instruments-and-a-mood is an order for wallpaper, and four films
-    in a row came back with "I was not happy with the music". Flow beats sync: never chop a continuous VO read into segments to
+    in a row came back with "I was not happy with the music".
+    Flow beats sync: never chop a continuous VO read into segments to
     chase beat alignment — shift the whole read or ask for a re-paced read; a
     choppy voice is worse than a half-beat drift.
 13. **Conform + report** — 1280x720, 24fps, final mute-watch pass. Write the run
@@ -266,7 +273,7 @@ variant per the rule above).
 | `references/overlay-grammar.md` | The text system: theme kit, choreography library, overlay QA |
 | `references/amazon-video-policy.md` | What Amazon rejects — checked before any credit moves |
 | `overlays/` | themes/, template.html, lib.js, embedded fonts.css |
-| `scripts/` | compose, lint, prep_refs, qa, deadspace, overlay_qa, theme_extract, policy_check, occlude, mix_audio, report |
+| `scripts/` | compose, lint, prep_refs, qa, deadspace, overlay_qa, theme_extract, policy_check, occlude, integrate, mix_audio, vo_qa, report |
 
 Every stage above is runnable; the rules were paid for on real productions (two full
 acceptance-grade runs, five review rounds). Do not improvise around a rule — the

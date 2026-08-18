@@ -4,8 +4,10 @@ A Claude Code skill. One Amazon ASIN in, a finished 30-second listing video out:
 cinematic footage, sound design, music, voiceover and animated text overlays.
 Zero questions during the run, one cost cap you set once.
 
-Each run spends Genrupt credits on the renders and the audio. You set a spending cap
-once, and the run stops before it can ever exceed what you allowed.
+Each run spends Genrupt credits on the renders and the audio. A clean 30-second film
+costs about **USD 11 to 12** of credits: a cheap test render first, then the master,
+then a few audio candidates. You set a spending cap once (default USD 20, which leaves
+room for one fix), and the run stops before it can ever exceed what you allowed.
 
 ## Install
 
@@ -62,6 +64,9 @@ only if an action would cross the cap.
 | `scripts/lint.py` | Hard gate before any credit moves |
 | `scripts/prep_refs.py` | Reference plates: crops, people screening, legal aspect ratios |
 | `scripts/qa.py` | Measured QA: mood bands, motion, end states, cut timing |
+| `scripts/overlay_qa.py` | The text layer: contrast, reading time, cut adjacency, VO sync |
+| `scripts/mix_audio.py` | The mix, and the gate that refuses a buried music bed |
+| `scripts/vo_qa.py` | The read: block count, holes, coverage, where the last word lands |
 | `scripts/report.py` | The per-run HTML decision report |
 | `examples/dry-run/` | A complete worked brief and shot plan, zero cost |
 

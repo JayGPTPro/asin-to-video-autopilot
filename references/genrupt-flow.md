@@ -113,7 +113,8 @@ curve INTO the promptRequest with rough second marks. A bed that ignores the fil
 wallpaper; wallpaper is what failed.
 
 **5a-brief. Three CONTRASTING directions, and every one names an event.**
-Jay, 18.8, after four films: "in most of the videos I was not happy with the music."
+A reviewer, after watching four finished films: "in most of the videos I was not
+happy with the music."
 The cause is not the level and not the model. It is that the brief keeps ordering
 instruments and a mood, which is an order for wallpaper, and then two near-identical
 candidates get generated so the choice is between one idea and itself.
@@ -138,8 +139,8 @@ and the user picks by ear. Two variations of one idea is not a choice.
 **5a-tempo. The tempo comes from the REGISTER, never from the cut grid.**
 This paragraph used to say "4s beats → 60 or 120 BPM so phrases land near cuts", and
 on 18.8 that arithmetic wrote a real film a 60 BPM felt-piano bed with "nothing showy"
-in it, off a shot plan that was 4/6/4/4/4/4/4. Jay's verdict on the delivery was that
-the music and the pace were very boring, and both came from the same line of maths.
+in it, off a shot plan that was 4/6/4/4/4/4/4. The verdict on that delivery was that
+the music and the pace were both very boring, and both came from the same line of maths.
 A cut grid is a symptom of the plan (see taste 7a, which now refuses a flat one); it
 is not a musical instruction.
 
@@ -151,7 +152,8 @@ is not a musical instruction.
 - Mix it with `--under 2 --ratio 1.5 --release 200 --sfx 0.55` under a continuous
   read. The old defaults (6 dB under, ratio 2.5, release 550, ambience at unity) put
   the bed **+0.7 dB under the voice and +4.6 dB louder the moment the read stopped**,
-  which is exactly the report we got: "you barely hear the music, at the end you do."
+  which is exactly the report that came back: "you barely hear the music, at the end
+  you do."
   The release has to be shorter than the read's shortest gap (0.47s here) or the duck
   never recovers, and the diegetic kitchen sound is usually the real masker, not the
   voice.

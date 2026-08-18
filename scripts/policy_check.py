@@ -61,6 +61,11 @@ def check(text, src):
 
 def main():
     hard, soft = [], []
+    # No argument and nothing piped in means the caller wants the usage, not a
+    # process that hangs on an empty stdin.
+    if len(sys.argv) <= 1 and sys.stdin.isatty():
+        print((__doc__ or "").strip())
+        sys.exit(2)
     args = sys.argv[1:] or ["-"]
     for a in args:
         text = sys.stdin.read() if a == "-" else open(a).read()

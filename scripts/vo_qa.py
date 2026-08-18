@@ -113,5 +113,13 @@ def main():
     print("PASS — the read flows")
 
 
+def _usage(min_args):
+    """A missing argument prints the script's own usage, never a traceback.
+    These scripts are read and run by hand as often as by the agent."""
+    if len(sys.argv) <= min_args:
+        print((__doc__ or "").strip() or f"usage: {sys.argv[0]} <args>")
+        sys.exit(2)
+
 if __name__ == "__main__":
+    _usage(2)
     main()

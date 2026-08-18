@@ -39,7 +39,7 @@ PERSON_WORDS = re.compile(
 SINGLE_OBJECT = re.compile(r"same single|one object|never two|hand to hand|one continuous path", re.I)
 
 # ── what the LISTING'S OWN WORDS demand of the film ──────────────────────────
-# Outside review, 18.8 (Rivka, on a Belleek Angel of Protection): the run read the
+# From an outside review, on an Irish china figurine sold as a memorial gift: the run read
 # features and missed the meaning. It did not know a shamrock is a luck symbol, it
 # did not carry the sympathy occasion that the TITLE states outright, it ignored the
 # authenticity backstamp that is the trust asset in heritage china, and it dropped
@@ -171,7 +171,7 @@ def lint(run_dir):
                 f"brief.packaging_beat naming the beat where the box appears")
 
     # ── rhythm: a uniform grid is the boring film (taste 7a) ────────
-    # Measured 18.8 on B0DQVDVBBM: a 4/6/4/4/4/4/4 plan came back as seven shots
+    # Measured on a baking-sheet film: a 4/6/4/4/4/4/4 plan came back as seven shots
     # between 3.79s and 4.75s and read as a slideshow. The damage spread: the
     # music brief derives tempo from the cut rhythm, so the same flat grid wrote
     # itself a 60 BPM bed. Every other check passed.
@@ -324,6 +324,14 @@ def lint(run_dir):
     return errors, warnings
 
 
+def _usage(min_args):
+    """A missing argument prints the script's own usage, never a traceback.
+    These scripts are read and run by hand as often as by the agent."""
+    if len(sys.argv) <= min_args:
+        print((__doc__ or "").strip() or f"usage: {sys.argv[0]} <args>")
+        sys.exit(2)
+
 if __name__ == "__main__":
+    _usage(1)
     errs, _ = lint(sys.argv[1] if len(sys.argv) > 1 else ".")
     sys.exit(1 if errs else 0)

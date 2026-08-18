@@ -7,9 +7,8 @@ reason — the run report prints them.
 
 ## 0. What is this product FOR? Read the occasion before the features
 
-An outside reviewer ran the skill on a Belleek Angel of Protection, an Irish parian
-china figurine sold as a sympathy gift, and returned four notes that were really one
-note: the run read the ATTRIBUTES and missed the INTENT. It did not carry the
+An outside reviewer ran the skill on a small china figurine sold as a memorial gift
+and returned four notes that were really one note: the run read the ATTRIBUTES and missed the INTENT. It did not carry the
 bereavement occasion that the title states in plain words, it did not know a shamrock
 means luck, it ignored the authenticity backstamp that is the whole trust argument in
 heritage china, and it dropped the gift box on a product whose entire use is being
@@ -160,7 +159,8 @@ her hair, completely unnatural"). Rules:
 
 ## 5c. A face never lives in a reflection
 
-Measured 18.8 on B0DQVDVBBM: the brief put the woman's face in the mirror floor of the
+Measured on a mirror-polished baking-sheet film: the brief put the woman's face in the
+mirror floor of the
 pan ("her face travels upside-down through the mirror beneath the lens"). Seedance
 SWAPPED the physics. It rendered the real woman above the rim upside down and her
 reflection inside the pan right way up. Two viewers read it the same way: not a mirror,
@@ -205,9 +205,10 @@ The model renders exactly the tempo you describe. Measured: a rejected draft car
 
 ### 7a. The cut rhythm has to VARY. A uniform grid is the boring film
 
-Measured 18.8 on B0DQVDVBBM: the plan was 4/6/4/4/4/4/4 and the render came back
+Measured on a baking-sheet film: the plan was 4/6/4/4/4/4/4 and the render came back
 3.79 / 4.75 / 4.17 / 4.08 / 4.33 / 3.83 / 3.96, standard deviation 0.33s. Every check
-passed. Jay watched it and said the pace was very boring, and he was right: seven shots
+passed. A viewer watched it and said the pace was very boring, and they were right:
+seven shots
 of the same length is a slideshow, not an edit. The damage does not stop at the
 picture. The music brief derives its tempo from the cut rhythm, so a 4-second grid
 wrote itself a 60 BPM bed with "nothing showy" in it, and the film ended up asking for

@@ -59,7 +59,7 @@ architecture makes structurally impossible.
 hero size is an aspiration, not a promise the footage can keep. Run
 `scripts/deadspace.py <film> --from T0 --to T1 --lines "A pour,|not a pill"`: it
 unions the busy pixels across the whole window, finds the largest rectangle that
-stays clean, and prints the biggest type that fits it. Measured (17.8, MaryRuth's):
+stays clean, and prints the biggest type that fits it. Measured on a liquid-supplement film:
 the theme asked for 150px and the film's roomiest window held 430x370px of clean
 background. Only two outcomes exist when the tier does not fit, and both are bugs —
 the super sits on a person, or it gets occluded into fragments. **Shrinking the tier
@@ -136,7 +136,7 @@ the frame at hero scale, and the person/product occludes it
   of the letters).
 - **THE LEGIBILITY BUDGET: at most ~35% of the glyphs may be hidden, and
   occlude.py now measures it and REFUSES past the budget.** Measured failure
-  (17.8, MaryRuth's): the subject was punched over "A pour, not a pill" and the
+  on a liquid-supplement film: the subject was punched over "A pour, not a pill" and the
   customer received "ur, / a ill" — 63% of the type hidden on average, 84% at
   worst. Every other check passed, because they all run on the PRE-occlusion
   render: contrast, reading time, VO sync and breath were all measured on text

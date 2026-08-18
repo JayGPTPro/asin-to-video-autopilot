@@ -9,7 +9,7 @@ answer without guessing: across a super's WHOLE window, which rectangle stays
 free of every subject, product and hand — and what is the largest type size
 that fits inside it.
 
-Why this exists (measured 17.8, MaryRuth's): the theme asked for a 150px hero
+Why this exists (measured on a liquid-supplement film): the theme asked for a 150px hero
 and the film's roomiest window held 430x370px of clean background. Nobody
 measured, so the super was placed on top of the subject and then "rescued" with
 occlusion, which hid 63% of its glyphs and shipped the line as "ur, / a ill".
@@ -50,7 +50,7 @@ def frames(video, t0, t1, n):
 
 
 # Calibrated on a real film against regions known to be good and known to be
-# busy (17.8, MaryRuth's, the pour beat):
+# busy (a liquid-supplement film, the pour beat):
 #   clean defocused background where type shipped fine:  grad p90 18, p99 29
 #   the glass and the falling stream:                    grad p90 62
 #   her torso and face:                                  grad p90 39

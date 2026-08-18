@@ -1,0 +1,11 @@
+{
+  "asin": "B0EXAMPLE1",
+  "title": "Fireline Luma Solar Camping Lantern, 360 Lumen, USB-C and Solar, Collapsible, IPX4 Water Resistant",
+  "bullets": [
+    "Charges from the sun or from USB-C",
+    "Collapses flat to the size of a phone",
+    "360 lumens on high, 40 hours on low"
+  ],
+  "description": "A rechargeable lantern for camping, power cuts and the back of the car.",
+  "_note": "Stage 1 writes this file from the scraped listing. The lint reads it to check the brief against what the seller actually says the product is (taste.md 0)."
+}
