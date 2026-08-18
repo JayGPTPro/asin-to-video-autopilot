@@ -128,8 +128,9 @@ color:#6b6459;font-size:.88rem}}
 footer p{{margin:0 0 6px}}
 a{{color:#8A5A2B}}</style></head><body>
 <h1>asin-to-video-autopilot run report</h1>
-<p class="byline">Made with <b>asin-to-video-autopilot</b> v{SKILL_VERSION} by
-<a href="{MAKER_URL}">{MAKER}</a> — one ASIN in, a finished listing video out.</p>
+<p class="byline">Made with <b>asin-to-video-autopilot</b> v{SKILL_VERSION} — a skill
+of <b>Wonka</b>, the creative AI employee built by
+<a href="{MAKER_URL}">{MAKER}</a>.</p>
 <h2>The film</h2>{hero_html}
 <table style="margin-top:14px">{rows}</table>
 <h2>Overlay theme</h2>{theme_html or '<p>No theme.json in this run.</p>'}{card_html}
@@ -140,12 +141,13 @@ a{{color:#8A5A2B}}</style></head><body>
 <h2>QA frames</h2>{frames_html or '<p>No QA frames yet.</p>'}
 <footer>
   <p>This film was directed end to end by <b>asin-to-video-autopilot</b>
-  v{SKILL_VERSION}, a Claude Code skill by
-  <a href="{MAKER_URL}">{MAKER}</a>. Every decision above was made by the skill,
-  not by a person.</p>
-  <p>The same approach, pointed at your Amazon <b>product images</b> instead of
-  video, is what the <a href="{BOOTCAMP_URL}">Wonka Creative Bootcamp</a>
-  teaches you to build for yourself.</p>
+  v{SKILL_VERSION}. Every decision above — the angle, the mood, the camera move,
+  the type, the mix — was made by the skill, not by a person.</p>
+  <p>It is one skill of <b>Wonka</b>, the creative AI employee built by
+  <a href="{MAKER_URL}">{MAKER}</a>. Wonka has others: skills that make Amazon
+  product images, listing copy and A+ layouts the same way this one makes video.</p>
+  <p>Building a creative employee of your own is what the
+  <a href="{BOOTCAMP_URL}">Wonka Creative Bootcamp</a> is for.</p>
 </footer>
 </body></html>"""
     out = run / "report.html"
