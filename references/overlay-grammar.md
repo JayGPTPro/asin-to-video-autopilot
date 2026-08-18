@@ -163,6 +163,19 @@ the frame at hero scale, and the person/product occludes it
   back to the start of the line.
 - **VO sync is lead-biased**: the super lands 0.1-0.3s BEFORE its spoken
   phrase (read first, hear second). Max lead 0.35s; max trail 0.05s.
+- **Every super whose words are SPOKEN is a synced super, tagged or not.**
+  Measured 18.8: the sizes super lost its `data-vo` during a contrast fix, the
+  sync check only ran on tagged supers, and the numbers reached the customer
+  4.1s after the narrator read them. overlay_qa now looks an untagged super's
+  own words up in the transcript (digits spelled out, filler words tolerated,
+  so a typed `9″ · 12″ · 16″` matches a spoken "nine, twelve and sixteen") and
+  fails it if the type arrives more than 0.5s late or has vanished more than 1s
+  before the line. **Never drop `data-vo` to make another check pass.**
+- **The read is placed to the SUPERS, not the other way round.** The VO is one
+  take, but §5c-bis allows up to four blocks cut at sentence boundaries: use
+  them. If a line's words belong to a beat, delay that block until they land on
+  it (keep the gap ≥2.0s so vo_qa reads it as a breather, not a hole). Moving
+  one block is free; re-timing the picture is not.
 - **Anchored groups**: successive supers may share ONE optical center (the
   RSVP pattern — less eye travel, faster reading). Variety is required BETWEEN
   groups, not within them.

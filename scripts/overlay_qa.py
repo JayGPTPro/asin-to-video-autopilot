@@ -74,6 +74,65 @@ ANIM_OVERHEAD = 0.9
 # by at most 0.05s — a late super reads as an echo.
 SYNC_LEAD_MAX = 0.35
 SYNC_TRAIL_MAX = 0.05
+# An UNTAGGED super whose words the narrator also says is still a sync problem, and
+# it is the one that shipped: the sizes super lost its data-vo during a contrast fix,
+# the check stopped running with it, and the numbers appeared 3.3s after the voice
+# read them out. Untagged supers get a loose version of the same law — late is fatal,
+# a little early is fine, because the eye reads before the ear hears.
+UNTAGGED_LATE_MAX = 0.5     # super may start at most this long after the word
+UNTAGGED_GONE_MAX = 1.0     # and may vanish at most this long before it
+NUMBER_WORDS = {"1": "one", "2": "two", "3": "three", "4": "four", "5": "five",
+                "6": "six", "7": "seven", "8": "eight", "9": "nine", "10": "ten",
+                "11": "eleven", "12": "twelve", "13": "thirteen", "14": "fourteen",
+                "15": "fifteen", "16": "sixteen", "17": "seventeen", "18": "eighteen",
+                "19": "nineteen", "20": "twenty", "30": "thirty", "40": "forty",
+                "50": "fifty", "100": "hundred"}
+
+
+PUNCT_RE = re.compile("[" + "\u2033\u2019\u2018\u201c\u201d\u2013\u2014" + "\"'`.,!?:;()<>-]")
+
+
+def norm_words(text):
+    """Lowercase content words, digits spelled out, measurement marks dropped —
+    so a typed 9" matches a spoken "nine"."""
+    out = []
+    for w in re.sub(PUNCT_RE, " ", text.lower()).split():
+        out.append(NUMBER_WORDS.get(w, w))
+    return out
+
+
+def find_loose(words, phrase, slack=3):
+    """Start time of the first IN-ORDER run of `phrase` allowing a few filler words
+    between them. A typed "9 . 12 . 16" is spoken "nine, twelve AND sixteen inches";
+    an exact contiguous match misses it, and missing it is how a 3.3s echo shipped."""
+    hay = []
+    for w in words:
+        n = norm_words(w["word"])
+        hay.append((n[0] if n else "", w["start"]))
+    for i in range(len(hay)):
+        if hay[i][0] != phrase[0]:
+            continue
+        j, k, gaps = i + 1, 1, 0
+        while j < len(hay) and k < len(phrase):
+            if hay[j][0] == phrase[k]:
+                k += 1
+            else:
+                gaps += 1
+                if gaps > slack:
+                    break
+            j += 1
+        if k == len(phrase):
+            return hay[i][1]
+    return None
+
+
+def find_phrase(words, phrase):
+    """Start time of the first contiguous match of `phrase` in the transcript."""
+    hay = [norm_words(w["word"])[0] if norm_words(w["word"]) else "" for w in words]
+    for i in range(len(hay) - len(phrase) + 1):
+        if hay[i:i + len(phrase)] == phrase:
+            return words[i]["start"]
+    return None
 BREATH_MIN = 1.0
 # Cut adjacency (ITC/Netflix): never START a super inside the 1s before a cut,
 # never let one DIE inside the 1s after a cut. Sitting exactly ON the cut
@@ -271,13 +330,8 @@ def main():
 
         # 5. VO SYNC — lead-biased: read first, hear second
         if s["vo"] and words:
-            phrase = s["vo"].lower().split()
-            best = None
-            for i in range(len(words) - len(phrase) + 1):
-                if [w["word"].lower().strip(".,!?") for w in
-                        words[i:i + len(phrase)]] == phrase:
-                    best = words[i]["start"]
-                    break
+            phrase = norm_words(s["vo"])
+            best = find_phrase(words, phrase)
             if best is None:
                 fails.append(f"VO SYNC: {label} phrase '{s['vo']}' not found in transcript")
             else:
@@ -289,6 +343,26 @@ def main():
                     fails.append(f"VO SYNC: {label} TRAILS its phrase by {-lead:.2f}s "
                                  f"— the super must land 0.1-0.3s BEFORE the word, "
                                  f"never after it")
+
+        # 5b. UNTAGGED BUT SPOKEN — the gap that let a 3.3s echo ship. A super with
+        # no data-vo escapes check 5 entirely, so look its own words up in the
+        # transcript: if the narrator says them, the type has to be on screen for it.
+        elif words and not s["vo"]:
+            own = [w for w in norm_words(s["text"]) if len(w) > 1]
+            spoken_at = find_loose(words, own) if len(own) >= 2 else None
+            if spoken_at is not None:
+                s_end = s["start"] + s["dur"]
+                if s["start"] - spoken_at > UNTAGGED_LATE_MAX:
+                    fails.append(
+                        f"VO SYNC: {label} has no data-vo, but the narrator says those "
+                        f"words at {spoken_at:.2f}s and the super only appears at "
+                        f"{s['start']:.2f}s — {s['start'] - spoken_at:.2f}s late reads "
+                        f"as an echo. Sync it and tag it with data-vo")
+                elif spoken_at - s_end > UNTAGGED_GONE_MAX:
+                    fails.append(
+                        f"VO SYNC: {label} is gone at {s_end:.2f}s but the narrator "
+                        f"says those words at {spoken_at:.2f}s — the type must still be "
+                        f"on screen when the line lands")
 
     # 6. BREATH
     for a, b in zip(sups, sups[1:]):
