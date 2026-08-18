@@ -157,10 +157,13 @@ Stage-by-stage detail lives in `references/` (see the map below). The shape:
 12. **THE AUDIO TASTE GATE.** Audio is the one layer meters cannot judge: every
     measured number can pass while the track sounds cheap, choppy or wrong for
     the picture (it happened; it failed review twice). So audio gets what
-    graphics get: the autopilot builds its best mix AND 1-2 clearly different
-    alternates (other music candidate, minimal-music, continuous vs re-paced VO),
-    ships them beside the film, and the report presents them as a listening
-    choice. Flow beats sync: never chop a continuous VO read into segments to
+    graphics get: the autopilot briefs THREE music directions that argue with each
+    other (never variations of one), renders the film with each, and ships them as
+    a listening choice beside the mix it recommends. One track per direction is
+    about $0.12. Each brief names a hummable hook, one structural event on a named
+    second, and one texture that is wrong for the category (`genrupt-flow`
+    5a-brief) — instruments-and-a-mood is an order for wallpaper, and four films
+    in a row came back with "I was not happy with the music". Flow beats sync: never chop a continuous VO read into segments to
     chase beat alignment — shift the whole read or ask for a re-paced read; a
     choppy voice is worse than a half-beat drift.
 13. **Conform + report** — 1280x720, 24fps, final mute-watch pass. Write the run

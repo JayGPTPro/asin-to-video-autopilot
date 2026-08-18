@@ -112,6 +112,29 @@ beat, grooves through the four use beats, resolves warm on the close"). Write th
 curve INTO the promptRequest with rough second marks. A bed that ignores the film is
 wallpaper; wallpaper is what failed.
 
+**5a-brief. Three CONTRASTING directions, and every one names an event.**
+Jay, 18.8, after four films: "in most of the videos I was not happy with the music."
+The cause is not the level and not the model. It is that the brief keeps ordering
+instruments and a mood, which is an order for wallpaper, and then two near-identical
+candidates get generated so the choice is between one idea and itself.
+
+Every music brief names three things or it is not finished:
+- **A HOOK** you could hum: "a kalimba motif of four notes that repeats", "a plucked
+  guitar figure of five notes with tape delay". Not "a warm melodic line".
+- **ONE STRUCTURAL EVENT on a named second**: "at about 16 seconds everything stops
+  for half a beat, then the hook returns alone". A bed with no event is flat, and
+  `mix_audio.py` now measures that (quarter-to-quarter arc; the bed the user called
+  boring scored 0.8 dB, the three that replaced it scored 7.9, 8.6, 8.2).
+- **ONE TEXTURE THAT IS WRONG FOR THE CATEGORY**: the register to reach for is a
+  premium technology ad, never the category cliché. A kitchen product does NOT get
+  cooking-show music. The strongest of the three directions built the percussion out
+  of the product itself, a fingertip ring on the steel, a knife tap, a drawer slide,
+  quantised into a groove.
+
+And generate THREE directions that argue with each other (found-sound score / pulse
+and pluck / warm bloom), never three variations of one. One track each, about $0.12,
+and the user picks by ear. Two variations of one idea is not a choice.
+
 **5a-tempo. The tempo comes from the REGISTER, never from the cut grid.**
 This paragraph used to say "4s beats → 60 or 120 BPM so phrases land near cuts", and
 on 18.8 that arithmetic wrote a real film a 60 BPM felt-piano bed with "nothing showy"
@@ -125,9 +148,13 @@ is not a musical instruction.
   choice (felt piano, brushes, upright bass), not a slow tempo.
 - Never write "a bar must land every N seconds" into a music prompt. Ask instead for
   one lift and one resolve, placed at second marks taken from the energy curve.
-- The bed is mixed 4 dB under the voice, not 6, when the film has fewer than ~8 words
-  of VO per beat: measured 18.8, a mix that passed the audibility gate at +3.4 dB
-  still came back as "you can barely hear the music".
+- Mix it with `--under 2 --ratio 1.5 --release 200 --sfx 0.55` under a continuous
+  read. The old defaults (6 dB under, ratio 2.5, release 550, ambience at unity) put
+  the bed **+0.7 dB under the voice and +4.6 dB louder the moment the read stopped**,
+  which is exactly the report we got: "you barely hear the music, at the end you do."
+  The release has to be shorter than the read's shortest gap (0.47s here) or the duck
+  never recovers, and the diegetic kitchen sound is usually the real masker, not the
+  voice.
 
 **5a-ter. A music refusal is a COIN FLIP, not a verdict on your brief — retry it.**
 Measured 18.8: Seed Audio `audioMode: "music"` returned `Content Policy Violation`
