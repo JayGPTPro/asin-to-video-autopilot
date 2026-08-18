@@ -20,6 +20,15 @@ from base64 import b64encode
 from html import escape
 from pathlib import Path
 
+# Attribution travels with the artifact. Every report a user shows a client is
+# also the only marketing this skill ever does — so the credit is a signature,
+# never a banner: one byline, one quiet footer, no price, no urgency, nothing
+# that would make a person LESS willing to forward the page.
+SKILL_VERSION = "1.1"
+MAKER = "Jay GPT Pro"
+MAKER_URL = "https://jaygptpro.com/video-autopilot/"
+BOOTCAMP_URL = "https://jaygptpro.com/wonka"
+
 
 def img_tag(p, w=220):
     data = b64encode(p.read_bytes()).decode()
@@ -112,8 +121,15 @@ def main(run_dir):
 padding:0 16px;line-height:1.6;color:#1d1a16;background:#faf6ef}}
 h1{{font-size:1.5rem}}h2{{font-size:1.1rem;border-bottom:2px solid #b8860b;padding-bottom:4px}}
 table{{border-collapse:collapse;width:100%}}td{{border:1px solid #e8e0d2;padding:6px 10px;
-vertical-align:top}}td:first-child{{font-weight:600;width:210px}}</style></head><body>
+vertical-align:top}}td:first-child{{font-weight:600;width:210px}}
+.byline{{color:#6b6459;font-size:.95rem;margin:-6px 0 22px}}
+footer{{margin-top:44px;padding-top:16px;border-top:1px solid #e8e0d2;
+color:#6b6459;font-size:.88rem}}
+footer p{{margin:0 0 6px}}
+a{{color:#8A5A2B}}</style></head><body>
 <h1>asin-to-video-autopilot run report</h1>
+<p class="byline">Made with <b>asin-to-video-autopilot</b> v{SKILL_VERSION} by
+<a href="{MAKER_URL}">{MAKER}</a> — one ASIN in, a finished listing video out.</p>
 <h2>The film</h2>{hero_html}
 <table style="margin-top:14px">{rows}</table>
 <h2>Overlay theme</h2>{theme_html or '<p>No theme.json in this run.</p>'}{card_html}
@@ -122,6 +138,15 @@ vertical-align:top}}td:first-child{{font-weight:600;width:210px}}</style></head>
 <h2>What you paid for</h2><table>{spend_rows(state)}</table>
 <h2>Known limits of this delivery</h2><ul>{unfixed_html}</ul>
 <h2>QA frames</h2>{frames_html or '<p>No QA frames yet.</p>'}
+<footer>
+  <p>This film was directed end to end by <b>asin-to-video-autopilot</b>
+  v{SKILL_VERSION}, a Claude Code skill by
+  <a href="{MAKER_URL}">{MAKER}</a>. Every decision above was made by the skill,
+  not by a person.</p>
+  <p>The same approach, pointed at your Amazon <b>product images</b> instead of
+  video, is what the <a href="{BOOTCAMP_URL}">Wonka Creative Bootcamp</a>
+  teaches you to build for yourself.</p>
+</footer>
 </body></html>"""
     out = run / "report.html"
     out.write_text(html)
