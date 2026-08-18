@@ -38,6 +38,30 @@ PERSON_WORDS = re.compile(
     r"the four|the three)\b", re.I)
 SINGLE_OBJECT = re.compile(r"same single|one object|never two|hand to hand|one continuous path", re.I)
 
+# ── what the LISTING'S OWN WORDS demand of the film ──────────────────────────
+# Outside review, 18.8 (Rivka, on a Belleek Angel of Protection): the run read the
+# features and missed the meaning. It did not know a shamrock is a luck symbol, it
+# did not carry the sympathy occasion that the TITLE states outright, it ignored the
+# authenticity backstamp that is the trust asset in heritage china, and it dropped
+# the gift box on a product whose whole use is being given. Four misses, one shape:
+# a research stage that extracts attributes cannot see intent. These patterns make
+# the listing's own words demand a decision in the brief.
+SENSITIVE_OCCASION = re.compile(
+    r"\b(sympathy|condolence|bereave\w*|memorial|in memory|loss of|passed away|"
+    r"funeral|urn|remembrance|grief|grieving|miscarriage|stillbirth|hospice|"
+    r"cancer|chemo|get well)\b", re.I)
+SYMBOLIC = re.compile(
+    r"\b(shamrock|clover|cross|crucifix|angel|hamsa|evil eye|star of david|"
+    r"menorah|lotus|infinity|claddagh|celtic knot|tree of life|birthstone|"
+    r"anniversary|zodiac|horseshoe|dove|butterfly|guardian)\b", re.I)
+PROVENANCE = re.compile(
+    r"\b(made in \w+|hand ?painted|hand ?made|handcrafted|artisan|hallmark\w*|"
+    r"backstamp|certificate of authenticity|authenticity (?:stamp|mark)|"
+    r"heirloom|since \d{4}|family ?owned)\b", re.I)
+GIFT_PACKAGING = re.compile(
+    r"\b(gift ?box\w*|gift ?ready|gift ?wrapped|presentation box|keepsake box|"
+    r"comes in a (?:box|tin|pouch)|ready to gift)\b", re.I)
+
 
 def lint(run_dir):
     run = Path(run_dir)
@@ -92,6 +116,59 @@ def lint(run_dir):
                       "impossible camera move")
     elif (sig.get("beat") or "hero") == "hook":
         errors.append("the signature shot goes on the hero beat, not the hook")
+
+    # ── the listing's own words demand a beat (taste 0) ─────────────
+    listing_p = run / "listing.json"
+    if not listing_p.exists():
+        warnings.append("no listing.json in the run — stage 1 must persist the title and "
+                        "bullets, or the brief cannot be checked against what the seller "
+                        "actually says the product IS")
+    else:
+        listing = json.loads(listing_p.read_text())
+        blob = " ".join([str(listing.get("title", ""))] +
+                        [str(b) for b in (listing.get("bullets") or [])] +
+                        [str(listing.get("description", ""))])
+
+        hit = SENSITIVE_OCCASION.search(blob)
+        if hit:
+            occ = brief.get("occasion") or {}
+            if not occ.get("sensitive"):
+                errors.append(
+                    f"the listing says '{hit.group(0)}' — this is a SENSITIVE-OCCASION "
+                    f"product (sympathy, memorial, illness). Set brief.occasion "
+                    f"{{sensitive: true, what: ..., handling: ...}} and read taste.md 0. "
+                    f"A cheerful film on a bereavement gift is the one failure that "
+                    f"cannot be fixed after it ships")
+            elif brief.get("register") != "calm":
+                errors.append(f"sensitive occasion ('{hit.group(0)}') with register "
+                              f"'{brief.get('register')}' — the register is calm, and the "
+                              f"cast does not laugh, cheer or celebrate")
+            elif (brief.get("mood") or {}).get("band") == "BRIGHT_EVERYDAY" \
+                    and not (occ.get("handling") or "").strip():
+                errors.append("sensitive occasion in a BRIGHT_EVERYDAY band with no written "
+                              "handling note — say in one line why the daylight is right here")
+
+        hit = SYMBOLIC.search(blob)
+        if hit and not (brief.get("symbols") or []):
+            errors.append(
+                f"the listing names '{hit.group(0)}', which carries MEANING a viewer reads "
+                f"before they read the product. Set brief.symbols [{{symbol, means, beat}}] "
+                f"— what it is, what it signifies, and which beat shows it whole. A symbol "
+                f"cropped in half is worse than a symbol absent")
+
+        hit = PROVENANCE.search(blob)
+        if hit and not (brief.get("provenance") or "").strip():
+            errors.append(
+                f"the listing claims '{hit.group(0)}' — provenance is the trust asset in "
+                f"this kind of product, and it has a PICTURE (a stamp, a mark, a signature, "
+                f"a hand at work). Set brief.provenance naming the beat that shows it")
+
+        hit = GIFT_PACKAGING.search(blob)
+        if hit and not (brief.get("packaging_beat") or "").strip():
+            errors.append(
+                f"the listing says '{hit.group(0)}' — for a gift, the box IS part of the "
+                f"product and the reference sheets exclude packaging by default. Set "
+                f"brief.packaging_beat naming the beat where the box appears")
 
     # ── rhythm: a uniform grid is the boring film (taste 7a) ────────
     # Measured 18.8 on B0DQVDVBBM: a 4/6/4/4/4/4/4 plan came back as seven shots

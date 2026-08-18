@@ -1,5 +1,7 @@
 {
   "cost_cap_usd": 20,
+  "review_brief": false,
+  "_review_brief_note": "false = full autopilot, the product's promise. true = the run stops ONCE after the brief and shot plan are written and before any credit moves, prints them, and waits. Asked for by an outside reviewer who wanted a say in the film's argument, not in its settings. It is the only gate that can be added without breaking the one-command promise, because it costs nothing and happens before the money.",
   "audio_track_usd": 0.2,
   "_audio_track_usd_note": "Genrupt returns no price preview for audio. Measured ~3 credits (~USD 0.20) per track on a clean single-session run. Count tracks and add them to the running total by hand.",
   "duration_seconds": 30,

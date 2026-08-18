@@ -16,6 +16,10 @@ One command, one finished listing video. You (the agent) make every creative dec
 using the taste rules in `references/`; the user's only inputs are the ASIN and the
 one-time config. The promise is AUTOPILOT: after the environment check passes and the
 config exists, a run never stops to ask anything unless it would cross the cost cap.
+The one exception a user can switch on: `review_brief: true` in config.json stops the
+run ONCE, after the brief and shot plan are written and before any credit moves, and
+waits for a yes. Default false. It is the only gate that does not break the promise,
+because it is free and it happens before the money.
 
 ## First run: environment + config
 
@@ -72,7 +76,12 @@ Stage-by-stage detail lives in `references/` (see the map below). The shape:
 
 1. **Research** — scrape the ASIN through Genrupt (`scrape_video_reference_images_from_asin`
    + listing data). OPEN the product images and look; titles lie. Read reviews for
-   emotional vs functional language.
+   emotional vs functional language. **Write `listing.json` into the run** (title,
+   bullets, description, image URLs): the lint checks the brief against the seller's
+   own words, and cannot if the run does not keep them. Then answer **taste.md §0**
+   before anything else — occasion, symbols, provenance, packaging. An outside
+   reviewer's four notes on a sympathy figurine were all the same miss: attributes
+   read, intent ignored.
 2. **Taste decisions** — apply `references/taste.md`: emotion/features center of
    gravity, mood band with a target luminance range, the signature camera move, cast
    diversity plan, the final image. Log every decision + its reason for the report.

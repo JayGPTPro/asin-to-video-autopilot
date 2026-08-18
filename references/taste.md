@@ -5,6 +5,41 @@ same model and the same compiler. When a rule says "measured", a film succeeded 
 to establish it. Apply them in order during stage 2 and LOG each decision with its
 reason — the run report prints them.
 
+## 0. What is this product FOR? Read the occasion before the features
+
+An outside reviewer ran the skill on a Belleek Angel of Protection, an Irish parian
+china figurine sold as a sympathy gift, and returned four notes that were really one
+note: the run read the ATTRIBUTES and missed the INTENT. It did not carry the
+bereavement occasion that the title states in plain words, it did not know a shamrock
+means luck, it ignored the authenticity backstamp that is the whole trust argument in
+heritage china, and it dropped the gift box on a product whose entire use is being
+handed to someone. A film can be technically perfect and still be the wrong film.
+
+Before the angle, answer four questions from the listing's own words. The lint checks
+all four against `listing.json`, so stage 1 must persist the title and bullets.
+
+- **Occasion.** Who is this bought FOR and on what day? If the listing says sympathy,
+  memorial, loss, bereavement, urn, remembrance, hospice, get-well: this is a
+  SENSITIVE occasion. Register is `calm`, full stop. Nobody laughs, cheers, high-fives
+  or celebrates. No upbeat bed, no groove, no snappy cutting. The film's argument is
+  meaning, and the product is handled the way you handle something that matters. Set
+  `brief.occasion {sensitive, what, handling}`.
+- **Symbols.** A shamrock, a cross, a claddagh, an angel, a birthstone, an anniversary
+  number: a viewer reads the MEANING before they read the object. Name each symbol,
+  what it signifies, and the beat that shows it WHOLE. A symbol cropped in half is
+  worse than a symbol absent. Set `brief.symbols`.
+- **Provenance.** "Made in Ireland", hand painted, hallmarked, a certificate, a
+  backstamp, "since 1857". In heritage and craft categories this is the trust asset,
+  and it has a picture: the stamp, the mark, the signature, the hand at work. Give it
+  a beat. Set `brief.provenance`.
+- **Packaging.** "Gift boxed" means the box is part of the product, not shipping
+  material. The product reference sheets exclude packaging by DEFAULT, so this one
+  gets dropped silently unless someone says otherwise. Set `brief.packaging_beat`.
+
+None of this applies to a commodity. A baking sheet has no occasion, no symbol and no
+provenance, and the lint stays quiet on it. The rule is not "add ceremony to
+everything", it is "when the seller tells you what the product MEANS, believe them".
+
 ## 1. Center of gravity: emotion or features (70/30, never 100/0)
 
 Read the reviews' LANGUAGE, not just their complaints. Emotional wording ("felt like
