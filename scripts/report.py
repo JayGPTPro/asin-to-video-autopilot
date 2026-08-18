@@ -141,9 +141,7 @@ of <b>Wonka</b>, the creative AI employee built by
 <h2>QA frames</h2>{frames_html or '<p>No QA frames yet.</p>'}
 <footer>
   <p>This film was directed end to end by <b>asin-to-video-autopilot</b>
-  v{SKILL_VERSION}. Every decision above — the angle, the mood, the camera move,
-  the type, the mix — was made by the skill, not by a person.</p>
-  <p>It is one skill of <b>Wonka</b>, the creative AI employee built by
+  v{SKILL_VERSION}, one skill of <b>Wonka</b> — the creative AI employee built by
   <a href="{MAKER_URL}">{MAKER}</a>. Wonka has others: skills that make Amazon
   product images, listing copy and A+ layouts the same way this one makes video.</p>
   <p>Building a creative employee of your own is what the
