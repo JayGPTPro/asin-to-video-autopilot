@@ -113,12 +113,33 @@ def main():
 
     cuts = cut_points(video)
     print("cuts:", cuts)
+
+    # MEASURE THE BEATS WHERE THEY ACTUALLY ARE. This used to walk the PLANNED
+    # seconds (0-4, 4-10, 10-14 …) while printing the detected cuts one line
+    # above, so every number described the wrong seconds the moment the cut
+    # moved. It always moves: stage 9's first free fix is a TRIM, and this
+    # file's own advice is to take it. Measured (18.8): after a 1.17s trim the
+    # planned windows reported the signature beat at motion 11.06 against a
+    # median of 11.82 — "the wow shot is the film's sleepiest" — and the real
+    # window, read off the detected cuts, measured 15.61 against a median of
+    # 15.61. The tool was one free trim away from sending the run to pay for a
+    # re-render of a beat that was already fine.
+    bounds = None
+    if len(cuts) == len(shots) - 1:
+        bounds = [0.0] + list(cuts) + [dur]
+    else:
+        print(f"  note: {len(cuts)} cuts detected for {len(shots)} beats — falling "
+              f"back to PLANNED windows; treat the per-beat numbers as approximate")
+
     signature_slot = ((brief.get("signature_shot") or {}).get("beat") or "hero")
     motions = {}
     clock = 0.0
-    for s in shots:
-        end = clock + s["seconds"]
-        mid = frame_at(video, min(clock + s["seconds"] / 2, dur - 0.1),
+    for i, s in enumerate(shots):
+        if bounds:
+            clock, end = bounds[i], bounds[i + 1]
+        else:
+            end = clock + s["seconds"]
+        mid = frame_at(video, min(clock + (end - clock) / 2, dur - 0.1),
                        qa_dir / f"{s['id']}-mid.jpg")
         lum, warm = measure(mid)
         is_close = s.get("slot") == "close"

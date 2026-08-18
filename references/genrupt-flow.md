@@ -18,6 +18,13 @@ every run, Genrupt pricing moves):
 - master 30s/720p `seedance25_ref_720p` = 135 credits = $8.10
 - audio, Seed Audio 30s = 2 credits = $0.12 per track
 
+**Re-measured 18.8.2026, and both renders cost MORE than the line above** — probe
+11 credits ($0.66), master 163 credits ($9.78), quoted by `costPreview` on the same
+model and settings two days later. Plan headroom from the HIGHER numbers: a run that
+budgets $8.10 for the master and holds $2 back for a fix is already over before the
+fix. The file keeps both readings on purpose — the point is not which is current,
+it is that the price moved 21% in two days and only `costPreview` knows.
+
 ## 1. Research scrape (free)
 
 `scrape_video_reference_images_from_asin {asin, maxImages: 9}` → background op →
@@ -105,6 +112,29 @@ beat by beat ("rises with the hook, suspends and empties out during the frozen h
 beat, grooves through the four use beats, resolves warm on the close"). Write that
 curve INTO the promptRequest with rough second marks. A bed that ignores the film is
 wallpaper; wallpaper is what failed.
+
+**5a-ter. A music refusal is a COIN FLIP, not a verdict on your brief — retry it.**
+Measured 18.8: Seed Audio `audioMode: "music"` returned `Content Policy Violation`
+seven times on a kitchen-music brief while `voiceover` succeeded on the same
+pipeline minutes apart. The refusals do not track the prompt. Two near-identical
+short prompts fired seconds apart in the SAME project split pass/fail; a long
+derived brief failed, a short one passed, then the same short shape failed again.
+The run lost about twenty minutes to rewriting a brief that was never the problem.
+
+The rule: **on a music refusal, fire the same request again.** Vary nothing but
+the idempotency key for at least three tries before touching a word. If it still
+refuses, try a short (~80 char) prompt and a fresh project — both correlated
+loosely with passing — but treat that as a lottery ticket, not a diagnosis, and
+never let a refusal talk you into shipping the generic bed the derived brief was
+written to replace. Refusals cost zero credits, so retrying is free and rewriting
+is what costs the run its music.
+
+**Seed Audio ignores `durationSeconds` for music.** Measured: 29s requested,
+16.5s returned, twice. Build the bed to length yourself with a crossfade loop
+(`acrossfade=d=0.7`) and fade the tail, then let `mix_audio.py` gate it — a raw
+short track leaves the film's second half silent and the differential check
+catches exactly that (measured: an alternate scored +1.9 dB against the +2.0
+floor purely because its bed ran out halfway).
 
 **5a-bis. Audio is CHEAP and priceable via presets.**
 Quote it live: `get_credit_balance_and_costs {presets: [{workflow:
