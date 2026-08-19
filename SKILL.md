@@ -39,25 +39,39 @@ because it is free and it happens before the money.
 ## How long a run takes, and `fast_mode`
 
 Measured on two real runs, 19.8, and the honest shape is not what the docs used to
-imply. A 30-second film is about **60 to 75 minutes**, and the render queue is the
-SMALL part of it: probe ~4 min, master ~8 min. The rest is this agent reading the
-listing, writing the brief, compiling, QA'ing the probe, and generating audio
-candidates. Tell the user that number up front, then work without narrating.
+imply. A full 30-second run is about **45-55 minutes** (after the rework fixes
+below), and the render queue is the SMALL part: probe ~4 min, master ~8 min. The
+rest is this agent reading the listing, writing the brief, compiling, QA'ing and
+generating audio. Tell the user the number up front, then work without narrating.
 
-`fast_mode: true` in config.json is for a demo or a first look. It drops the
-optional depth and keeps every gate:
+**Where rework used to go, and the tool that replaces each loop:**
+- Writing beats long and trimming (5 rounds, ~10 min measured): run
+  `compose.py --budget <run>` FIRST and write each beat once, to its printed
+  allowance (taste 9).
+- VO takes bouncing off vo_qa (2 wasted takes, ~8 min): the script length is
+  arithmetic, words = seconds x 1.8, and the prompt carries the two shape lines
+  (genrupt-flow 5c-bis).
+- Audio fired serially with hand-managed retries (~6 min): fire the whole batch
+  at once and auto-retry refusals (genrupt-flow 5a-quater).
+
+`fast_mode: true` in config.json is the demo profile, **~25-30 minutes**:
 
 | Dropped in fast mode | Saves | Kept always |
 |---|---|---|
 | the probe render | ~7 min, ~USD 0.65 | the cost cap |
-| 3 music directions -> 1 | ~5 min, ~USD 0.40 | policy_check, lint |
-| 2 VO takes -> 1 | ~3 min | vo_qa, overlay_qa |
-| the occlusion moment | ~5 min | mix_audio's audibility gate |
-| the style card | ~2 min | the one-FINAL delivery contract |
+| the text-overlay stage (see `overlays`) | ~15-25 min | policy_check, lint |
+| 3 music directions -> 1 | ~5 min, ~USD 0.40 | vo_qa |
+| 2 VO takes -> 1 | ~3 min | mix_audio's audibility gate |
+| occlusion + style card | ~7 min | the one-FINAL delivery contract |
+| browsing beyond the listing page | ~5 min | qa.py on the master |
+
+A film without the overlay stage is still a complete delivery: footage, VO, music,
+mix. `overlays: false` is also available on its own for a full-quality run that
+wants text added later.
 
 **Never invent a third mode**, and never trade away a gate for time. Fast mode
-removes CHOICES, so the film has fewer alternates and no cheap insurance render
-before the expensive one. It does not remove a single check.
+removes CHOICES and DEPTH — fewer alternates, no insurance render, no text layer.
+It does not remove a single check on what it does deliver.
 
 ## The money contract
 
@@ -179,7 +193,7 @@ Stage-by-stage detail lives in `references/` (see the map below). The shape:
     words.json`, which owns the model lookup and the file shape) and verified against
     their beats; the mix keeps SFX forward (they are the realism layer), music
     ducked under, VO on top. Never ship the only candidate unheard.
-11. **Overlays — the theme kit** (`references/overlay-grammar.md`). Pick ONE theme
+11. **Overlays — the theme kit** (SKIPPED when `fast_mode` or `overlays: false`) (`references/overlay-grammar.md`). Pick ONE theme
     from `overlays/themes/` (five registers incl. condensed-editorial), lock its
     palette from the product's own label (`scripts/theme_extract.py`) and **cap
     the ink to the plate's highlight** (`scripts/integrate.py measure`).

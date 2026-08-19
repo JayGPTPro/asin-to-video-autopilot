@@ -146,6 +146,51 @@ def trim_candidates(prompt):
     return sorted(out, key=lambda x: -x[1])
 
 
+def budget(run_dir):
+    """Print each beat's character allowance BEFORE any beat prose exists.
+
+    Builds the real scaffold for THIS brief (header, references, cast,
+    constraints) and divides what is left under the ceiling across the beats by
+    seconds. Exists because the alternative was measured five times on one run:
+    write long, compile, get refused, trim, repeat — ~10 minutes of rework that
+    this one free call replaces. Requires brief.json + shotplan.json; beat
+    'action' fields may be empty or missing."""
+    run = Path(run_dir)
+    brief = json.loads((run / "brief.json").read_text())
+    plan = json.loads((run / "shotplan.json").read_text())
+    shots = plan["shots"]
+    total = sum(float(s["seconds"]) for s in shots)
+
+    product = brief.get("product_name") or brief.get("asin") or "the product"
+    look = brief.get("global_look") or "natural light, one continuous mood"
+    capture = brief.get("capture_block") or DEFAULT_CAPTURE
+    head = (f"A photorealistic {int(total)} second product film for "
+            f"{sentence(product)} {sentence(look)} {capture}")
+    refs = reference_lines(brief.get("references"), {})
+    anyone = any((s.get("people") or {}).get("present") for s in shots)
+    cast = cast_lines(brief.get("cast")) if anyone else []
+    # constraints are ~6 fixed lines + forbidden; estimate from the brief
+    forb = brief.get("forbidden") or []
+    constraint_est = 420 + sum(len(str(f)) + 6 for f in forb)
+    timecode_overhead = 14 * len(shots)          # "[0:00-0:04] " per beat
+    scaffold = (len(head) + sum(len(x) + 1 for x in refs)
+                + sum(len(x) + 1 for x in cast) + constraint_est
+                + timecode_overhead + 40)
+    room = (CHARS_LOST - 100) - scaffold          # 100 = safety margin
+    print(f"scaffold for this brief: ~{scaffold} chars "
+          f"(header {len(head)}, refs {sum(len(x) for x in refs)}, "
+          f"cast {sum(len(x) for x in cast)}, constraints ~{constraint_est})")
+    print(f"room for beats under the {CHARS_LOST} ceiling (100 margin): {room} chars "
+          f"= {room / total:.0f} chars/sec")
+    for s in shots:
+        share = int(room * float(s["seconds"]) / total)
+        print(f"  {s.get('id') or s.get('slot'):<6} {s['seconds']}s -> "
+              f"write its action to ~{share} chars")
+    print("Write each beat ONCE, to its number. If a beat needs more, take it from "
+          "another beat or cut one (taste 9) — never write long and trim.")
+    return room
+
+
 def compose(run_dir):
     run = Path(run_dir)
     brief = json.loads((run / "brief.json").read_text())
@@ -252,4 +297,8 @@ def _usage(min_args):
 
 if __name__ == "__main__":
     _usage(1)
-    compose(sys.argv[1] if len(sys.argv) > 1 else ".")
+    if sys.argv[1] == "--budget":
+        _usage(2)
+        budget(sys.argv[2])
+    else:
+        compose(sys.argv[1])

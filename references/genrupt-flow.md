@@ -181,6 +181,19 @@ short track leaves the film's second half silent and the differential check
 catches exactly that (measured: an alternate scored +1.9 dB against the +2.0
 floor purely because its bed ran out halfway).
 
+**5a-quater. ALL audio fires as ONE parallel batch, and a refusal retries itself.**
+Audio generations are async: `generate_project_audio` returns an operationId
+immediately. Measured 19.8: a run fired VO, then music A, then B, then C as four
+separate calls, polled each one to completion before starting the next, and handled
+the two content-policy refusals by hand — ~6 minutes for what is ~90 seconds of
+provider time. The required shape:
+1. Fire EVERY track the stage needs back-to-back (all VO takes + all music
+   directions) and collect the operationIds.
+2. Poll them together in one loop.
+3. On `Content Policy Violation`, re-fire the SAME request unchanged with a fresh
+   idempotency key, immediately, up to 3 times (5a-ter: the refusal is a coin flip
+   and does not track the prompt). Never rewrite the prompt for it, never ask.
+
 **5a-bis. Audio is CHEAP and priceable via presets.**
 Quote it live: `get_credit_balance_and_costs {presets: [{workflow:
 "audio_generation", audioDurationSeconds: 30, trackCount: N}]}` returned a real
@@ -257,10 +270,17 @@ dead holes. The unified rule:
    cut times are known, REVISE the script against the real beats (which claims
    land where, what got trimmed) and only then generate the read. A read
    recorded against an imagined film is why narration feels pasted on.
-2. **Script budget: spoken words fill 55-80% of the runtime**, with air written
-   in around the freeze and the close. Wall-to-wall cannot stay in sync.
-3. **Generate 2 takes of ONE continuous read** and pick by whisper gap profile
-   (no intra-phrase hole over ~0.9s).
+2. **Script budget IS ARITHMETIC, run it before writing: target words =
+   film_seconds x 1.8** (2.4 words/sec spoken x 75% coverage). A 30s film is
+   ~54 words, a 21s film ~38. Measured 19.8: a script written by feel came back
+   at 96% coverage, vo_qa correctly refused it against its own 50-85% band, and
+   the run burned two more takes (~8 min, $0.80) converging on what one
+   multiplication would have said. Wall-to-wall cannot stay in sync.
+3. **The generation prompt carries two shape lines, verbatim** — these are what
+   made the passing take pass: "a natural breath of about three quarters of a
+   second between sentences" and "finish at about {film_seconds - 2} seconds".
+   Then **generate 2 takes of ONE continuous read** (1 in fast_mode) and pick by
+   gap profile (no intra-phrase hole over ~0.9s).
 4. **Place the pick as AT MOST 4 BLOCKS** (hook / body / body / close), cutting
    ONLY at sentence boundaries. Inside a block the read is untouched — the
    pauses inside it are the narrator's own breathing and they are what "flows"

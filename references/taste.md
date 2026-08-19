@@ -252,9 +252,19 @@ never the detail. (Budget: ~3,400 chars obeyed beat-for-beat; ~7,500 measurably 
 the choreography. The composer reports both numbers.) Plan for the ceiling from
 the FIRST draft: with a 4-person cast block, header and references, the beats get
 roughly 5,200-5,600 chars — about 55-65 words of action per 4s beat. Writing
-long and trimming six times (measured) wastes a session; write to size. On a 27-30s film the ceiling
-binds first: fill the budget to just under it (~185-210 chars/sec) and treat 150 as
-the floor; 230 is the target only up to ~15s of film.
+long and trimming six times (measured) wastes a session; write to size.
+
+**The target DEPENDS ON DURATION, because the 7,500 ceiling binds first on long
+films.** Measured 19.8: a 30s film with a 4-person cast carries ~2,400 chars of
+scaffold, so "185-210 chars/sec" would need ~7,950 total — arithmetically impossible
+under the ceiling, and chasing it cost a run five rewrite rounds (~10 minutes) before
+compiling at 160. The honest bands:
+- up to ~15s of film: 210-230 chars/sec on beats
+- ~16-24s: 175-200
+- 27-30s with a full cast: **155-170, floor 150**
+Never iterate toward these by feel: run `compose.py --budget <run_dir>` FIRST. It
+builds the real scaffold for this brief and prints each beat's character allowance;
+write each beat to its printed number, once.
 
 ## 9b. An effect that SPREADS is enumerated, in order, one item per line
 
