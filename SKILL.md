@@ -36,6 +36,29 @@ because it is free and it happens before the money.
    the authoritative price of every render is the `costPreview` in its own
    `generate_video` response, and that is the number you log.
 
+## How long a run takes, and `fast_mode`
+
+Measured on two real runs, 19.8, and the honest shape is not what the docs used to
+imply. A 30-second film is about **60 to 75 minutes**, and the render queue is the
+SMALL part of it: probe ~4 min, master ~8 min. The rest is this agent reading the
+listing, writing the brief, compiling, QA'ing the probe, and generating audio
+candidates. Tell the user that number up front, then work without narrating.
+
+`fast_mode: true` in config.json is for a demo or a first look. It drops the
+optional depth and keeps every gate:
+
+| Dropped in fast mode | Saves | Kept always |
+|---|---|---|
+| the probe render | ~7 min, ~USD 0.65 | the cost cap |
+| 3 music directions -> 1 | ~5 min, ~USD 0.40 | policy_check, lint |
+| 2 VO takes -> 1 | ~3 min | vo_qa, overlay_qa |
+| the occlusion moment | ~5 min | mix_audio's audibility gate |
+| the style card | ~2 min | the one-FINAL delivery contract |
+
+**Never invent a third mode**, and never trade away a gate for time. Fast mode
+removes CHOICES, so the film has fewer alternates and no cheap insurance render
+before the expensive one. It does not remove a single check.
+
 ## The money contract
 
 - Total spend per run is bounded by `cost_cap_usd` in config.json.
@@ -43,6 +66,12 @@ because it is free and it happens before the money.
 - **BEFORE every paid action, check headroom against its WORST CASE cost, not its
   hoped-for cost.** If `running_total + worst_case > cap`, stop and ask. This is the
   only mid-run stop that exists.
+- **Nothing else is ever a question for the user.** Measured 19.8: a run compiled at
+  7,518 characters against the 7,500 ceiling, asked the user for permission to delete
+  eighteen characters, and then sat idle for **54 minutes** — longer than all of its
+  real work put together. A tool that refuses now prints the cheapest fixes with their
+  character counts; apply them and carry on. If a decision is genuinely yours to make,
+  make it, log it in the report, and keep moving.
 - Typical run: probe ~USD 0.65, master 30s ~USD 9.80, audio ~USD 1 for a few
   candidates, so about USD 11-12 all in, leaving
   headroom for at most ONE autonomous fix. A second failure is written to the report
@@ -103,7 +132,8 @@ Stage-by-stage detail lives in `references/` (see the map below). The shape:
 5. **References prep** — `scripts/prep_refs.py`: screen for real people, crop
    marketing text, pad to legal aspect ratio BEFORE upload (a failed download bills;
    a filter refusal is free).
-6. **Probe** — 4s/480p of the signature shot with real references. QA the probe:
+6. **Probe** (SKIPPED when `fast_mode: true`) — 4s/480p of the signature shot with
+   real references. QA the probe:
    product fidelity, luminance vs the declared mood band. **Every probe finding must
    become a change in the master prompt before the master runs, not a note.** Measured:
    a probe predicted the product losing its surface texture in close foreground, the
@@ -165,12 +195,13 @@ Stage-by-stage detail lives in `references/` (see the map below). The shape:
     distribution) — FAIL blocks the composite. LOOK at `qa/overlay-boxes/`:
     a box on a face/product/label is a reposition, EXCEPT the one occluded
     hero super, where the subject wins by construction. After the composite:
-    **one occlusion moment** (`scripts/occlude.py`, which REFUSES and deletes
+    **one occlusion moment**, skipped in `fast_mode` (`scripts/occlude.py`, which REFUSES and deletes
     its output if the subject hides more than ~35% of the glyphs — measured: a
     hero line reached the customer as "ur, / a ill") and **matched grain**
     (`integrate.py grain`). Sizes meet Amazon's 50pt/720p floor. **Brand
     marks: real or absent** (taste.md §4b).
-12. **THE AUDIO TASTE GATE.** Audio is the one layer meters cannot judge: every
+12. **THE AUDIO TASTE GATE** (`fast_mode`: one music direction, one VO take).
+    Audio is the one layer meters cannot judge: every
     measured number can pass while the track sounds cheap, choppy or wrong for
     the picture (it happened; it failed review twice). So audio gets what
     graphics get: the autopilot briefs THREE music directions that argue with each
