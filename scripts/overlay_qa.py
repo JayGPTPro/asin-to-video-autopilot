@@ -5,7 +5,9 @@ The video QA (qa.py) never looks at the text; this script does.
 Usage:
   overlay_qa.py <overlay_index.html> <film.mp4> <theme.json> [words.json]
 
-words.json = whisper word timestamps: [{"word": "roots", "start": 8.31, ...}].
+words.json = {"words": [{"word": "roots", "start": 8.31, "end": 8.55}, ...]}.
+Build it with `python3 transcribe.py <placed_vo.wav> words.json` — that script owns
+finding the whisper model and converting its output into this exact shape.
 A super that should track speech carries data-vo="the spoken phrase" in its
 HTML; sync is checked against the measured time of that phrase.
 

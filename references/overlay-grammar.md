@@ -29,7 +29,8 @@ architecture makes structurally impossible.
    builds, mapped per theme in its JSON. Every super is a BUILD (entrance + one
    secondary motion during the hold + exit), never a bare fade.
 5. **QA the layer**: `scripts/overlay_qa.py <index.html> <film.mp4> <theme.json>
-   [words.json]` — theme lock, worst-frame contrast, busy-zone scrim demand,
+   [words.json]` (build words.json with `scripts/transcribe.py`) — theme lock,
+   worst-frame contrast, busy-zone scrim demand,
    reading time, size floor, VO sync, breath gaps. FAIL blocks the render.
 6. **The box-sheet eye pass is MANDATORY.** overlay_qa writes
    `qa/overlay-boxes/` — sampled frames with every super's box drawn on them.

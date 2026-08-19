@@ -4,8 +4,9 @@
     python3 vo_qa.py <placed_vo.(wav|mp3)> <film_seconds>
 
 Run it on the PLACED voiceover track (the VO stem laid out on the film's
-timeline, before the mix). It transcribes with whisper word timestamps, infers
-blocks (runs of speech separated by silences over the block threshold), and
+timeline, before the mix). It finds the speech from ENERGY, never from a
+transcript (see the note at SILENCE_DB), infers blocks (runs of speech separated
+by silences over the block threshold), and
 enforces the flow doctrine (genrupt-flow §5c-bis). Every rule below maps to a
 failure a user actually heard:
 

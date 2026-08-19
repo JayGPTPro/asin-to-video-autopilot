@@ -145,7 +145,8 @@ Stage-by-stage detail lives in `references/` (see the map below). The shape:
     buried the music on three runs and shipped it twice, because every absolute
     number in a finished mix looks correct whether or not the music is there. The music brief is DERIVED from the film's register, cut rhythm and
     energy curve; 2-3 candidates are generated and PICKED by envelope-vs-cuts
-    alignment; VO word timings are MEASURED with whisper and verified against
+    alignment; VO word timings are MEASURED (`scripts/transcribe.py <placed_vo.wav>
+    words.json`, which owns the model lookup and the file shape) and verified against
     their beats; the mix keeps SFX forward (they are the realism layer), music
     ducked under, VO on top. Never ship the only candidate unheard.
 11. **Overlays — the theme kit** (`references/overlay-grammar.md`). Pick ONE theme
@@ -273,7 +274,7 @@ variant per the rule above).
 | `references/overlay-grammar.md` | The text system: theme kit, choreography library, overlay QA |
 | `references/amazon-video-policy.md` | What Amazon rejects — checked before any credit moves |
 | `overlays/` | themes/, template.html, lib.js, embedded fonts.css |
-| `scripts/` | compose, lint, prep_refs, qa, deadspace, overlay_qa, theme_extract, policy_check, occlude, integrate, mix_audio, vo_qa, report |
+| `scripts/` | compose, lint, prep_refs, qa, deadspace, overlay_qa, theme_extract, policy_check, occlude, integrate, transcribe, mix_audio, vo_qa, report |
 
 Every stage above is runnable; the rules were paid for on real productions (two full
 acceptance-grade runs, five review rounds). Do not improvise around a rule — the

@@ -51,7 +51,7 @@ if command -v whisper-cli >/dev/null 2>&1; then
     miss "whisper model ggml-base.en.bin" "curl -L -o ~/.cache/whisper/ggml-base.en.bin --create-dirs https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.en.bin (then: export WHISPER_MODEL=~/.cache/whisper/ggml-base.en.bin)"
   fi
 else
-  miss "whisper-cli (voiceover timing QA)" "macOS: brew install whisper-cpp | then download the model: curl -L -o ~/.cache/whisper/ggml-base.en.bin --create-dirs https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.en.bin"
+  miss "whisper-cli (voiceover timing QA)" "macOS: brew install whisper-cpp | Windows: winget install ggerganov.whisper.cpp (or use WSL) | Linux: build whisper.cpp | then the model: curl -L -o ~/.cache/whisper/ggml-base.en.bin --create-dirs https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.en.bin"
 fi
 
 # 5. Genrupt MCP — checked at run time from inside the agent, not from bash.
@@ -61,7 +61,7 @@ warn "Genrupt MCP connection + credits" "verified on every run via get_credit_ba
 if command -v genrupt >/dev/null 2>&1; then
   ok "genrupt CLI (local file uploads available)"
 else
-  warn "genrupt CLI not found" "only needed for local reference files; ASIN scraping works without it"
+  warn "genrupt CLI not found" "ASIN scraping works without it. Needed only to hand the run LOCAL files: your own reference images, or the clip a surgical re-edit uploads. Install: npm install -g @genrupt/cli@latest && genrupt auth login"
 fi
 
 echo
