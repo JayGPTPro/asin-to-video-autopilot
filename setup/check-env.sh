@@ -45,7 +45,15 @@ fi
 
 # 4. whisper-cli + model — measured VO timing (the audio QA depends on it)
 if command -v whisper-cli >/dev/null 2>&1; then
-  if ls "$HOME"/.cache/whisper/ggml-base.en.bin >/dev/null 2>&1 || ls ./ggml-base.en.bin >/dev/null 2>&1 || [ -n "$WHISPER_MODEL" ]; then
+  # Mirror transcribe.py's find_model() exactly: test the FILE, never just that
+  # $WHISPER_MODEL is set. A stale env var passed this check and then failed the
+  # VO gate after the paid render.
+  if [ -f "${WHISPER_MODEL/#\~/$HOME}" ] \
+     || [ -f "$HOME/.cache/whisper/ggml-base.en.bin" ] \
+     || [ -f "./ggml-base.en.bin" ] \
+     || [ -f "/opt/homebrew/share/whisper-cpp/ggml-base.en.bin" ] \
+     || [ -f "/usr/local/share/whisper-cpp/ggml-base.en.bin" ] \
+     || [ -f "/usr/share/whisper.cpp/ggml-base.en.bin" ]; then
     ok "whisper-cli with a base.en model"
   else
     miss "whisper model ggml-base.en.bin" "curl -L -o ~/.cache/whisper/ggml-base.en.bin --create-dirs https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.en.bin (then: export WHISPER_MODEL=~/.cache/whisper/ggml-base.en.bin)"
