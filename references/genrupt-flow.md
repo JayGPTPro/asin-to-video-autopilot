@@ -279,7 +279,8 @@ dead holes. The unified rule:
 3. **The generation prompt carries two shape lines, verbatim** — these are what
    made the passing take pass: "a natural breath of about three quarters of a
    second between sentences" and "finish at about {film_seconds - 2} seconds".
-   Then **generate 2 takes of ONE continuous read** (1 in fast_mode) and pick by
+   Then **generate 2 takes of ONE continuous read**, in the same parallel batch as
+   the music (5a-quater), and pick by
    gap profile (no intra-phrase hole over ~0.9s).
 4. **Place the pick as AT MOST 4 BLOCKS** (hook / body / body / close), cutting
    ONLY at sentence boundaries. Inside a block the read is untouched — the

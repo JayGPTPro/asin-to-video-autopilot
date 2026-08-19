@@ -181,12 +181,17 @@ the frame at hero scale, and the person/product occludes it
   RSVP pattern — less eye travel, faster reading). Variety is required BETWEEN
   groups, not within them.
 
-## The style card
+## Three supers, and no style card
 
-Before compositing the full film, render ~6s of one real beat with the locked
-theme (`npx hyperframes render` on a trimmed clip). It costs seconds, ships in the
-report, and is the eye-check that catches a theme that measured fine and looks
-wrong. Swapping the theme is a one-line change + re-render, free.
+**At most THREE supers in a 30s film**: the hook, the differentiator, one fact.
+Each one costs a measured dead-space window, a contrast pass, a choreography build
+and a place in the QA sheet, and a fourth adds minutes without adding an argument.
+If a fourth feels necessary, one of the three was not carrying its weight.
+
+The style card (a 6s render of one beat in the locked theme) is retired from the
+pipeline. It was an eye-check for a theme that measured fine and looked wrong, and
+it cost ~2 minutes on every run to catch something the box sheet and the composite
+already show. Render one by hand if a theme choice ever feels genuinely uncertain.
 
 ## HyperFrames mechanics
 

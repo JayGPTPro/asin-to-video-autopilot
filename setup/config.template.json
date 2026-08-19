@@ -1,9 +1,5 @@
 {
   "cost_cap_usd": 20,
-  "fast_mode": false,
-  "_fast_mode_note": "false = the full pipeline, ~45-55 minutes. true = the demo profile, ~25-30 minutes: no probe render, no text-overlay stage (see overlays), ONE music direction instead of three, ONE voiceover take, no occlusion, no style card, and stage 1 reads the listing page only (no wider browsing). Every GATE still runs: the cost cap, policy_check, lint, vo_qa and the music audibility gate. Fast mode removes choices and depth, never checks.",
-  "overlays": true,
-  "_overlays_note": "true = the animated text layer (stage 11): theme lock, measured dead space, HTML build, overlay QA, composite. It is the single largest block of a run, 15-25 minutes. false = deliver the film without burned-in text \u2014 still a complete film (footage, VO, music, mix). fast_mode implies overlays=false unless this key explicitly says true.",
   "review_brief": false,
   "_review_brief_note": "false = full autopilot, the product's promise. true = the run stops ONCE after the brief and shot plan are written and before any credit moves, prints them, and waits. Asked for by an outside reviewer who wanted a say in the film's argument, not in its settings. It is the only gate that can be added without breaking the one-command promise, because it costs nothing and happens before the money.",
   "audio_track_usd": 0.2,

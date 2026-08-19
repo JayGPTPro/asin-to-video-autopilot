@@ -4,10 +4,13 @@ A Claude Code skill. One Amazon ASIN in, a finished 30-second listing video out:
 cinematic footage, sound design, music, voiceover and animated text overlays.
 Zero questions during the run, one cost cap you set once.
 
-Each run spends Genrupt credits on the renders and the audio. A clean 30-second film
-costs about **USD 11 to 12** of credits: a cheap test render first, then the master,
-then a few audio candidates. You set a spending cap once (default USD 20, which leaves
-room for one fix), and the run stops before it can ever exceed what you allowed.
+A run takes **about 40 minutes** and costs about **USD 11 to 12** of Genrupt credits:
+a cheap test render first, then the master, then a few audio candidates. You set a
+spending cap once (default USD 20, which leaves room for one fix), and the run stops
+before it can ever exceed what you allowed.
+
+There is one pipeline and no settings to choose between. The animated text layer is
+always part of the film.
 
 ## Install
 

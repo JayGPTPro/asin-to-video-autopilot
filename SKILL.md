@@ -36,42 +36,35 @@ because it is free and it happens before the money.
    the authoritative price of every render is the `costPreview` in its own
    `generate_video` response, and that is the number you log.
 
-## How long a run takes, and `fast_mode`
+## How long a run takes, and what this skill does NOT do
 
-Measured on two real runs, 19.8, and the honest shape is not what the docs used to
-imply. A full 30-second run is about **45-55 minutes** (after the rework fixes
-below), and the render queue is the SMALL part: probe ~4 min, master ~8 min. The
-rest is this agent reading the listing, writing the brief, compiling, QA'ing and
-generating audio. Tell the user the number up front, then work without narrating.
+Measured on real runs, 19.8: **about 40 minutes**, and the render queue is the small
+part of it (probe ~4 min, master ~8 min). The rest is this agent reading the listing,
+writing the brief, building the text layer and QA'ing. Tell the user the number up
+front, then work without narrating.
 
-**Where rework used to go, and the tool that replaces each loop:**
-- Writing beats long and trimming (5 rounds, ~10 min measured): run
-  `compose.py --budget <run>` FIRST and write each beat once, to its printed
-  allowance (taste 9).
-- VO takes bouncing off vo_qa (2 wasted takes, ~8 min): the script length is
-  arithmetic, words = seconds x 1.8, and the prompt carries the two shape lines
-  (genrupt-flow 5c-bis).
-- Audio fired serially with hand-managed retries (~6 min): fire the whole batch
-  at once and auto-retry refusals (genrupt-flow 5a-quater).
+**There is ONE pipeline. No fast mode, no toggles, no "lite" run.** Everyone gets the
+same film, and the animated text layer is always part of it — it is the thing people
+notice first, so it is never the thing that gets cut.
 
-`fast_mode: true` in config.json is the demo profile, **~25-30 minutes**:
+What was cut permanently to get here, because it cost minutes and changed the film
+less than the type does:
+- **The occlusion moment.** The subject passing in front of a super cost ~5 minutes,
+  needed a segmentation engine that is not in every environment, and once hid 63% of a
+  hero line. A super placed in measured dead space does not need rescuing.
+- **The style card.** A 6-second card nobody watches, ~2 minutes.
+- **Research beyond the listing page.** The title, the bullets and the gallery are the
+  product's own words. Wider browsing added ~5 minutes and rarely changed the argument.
+- **Three delivered mixes.** One FINAL and ONE alternate, not three.
+- **At most 3 supers**, not 4-5. The hook, the differentiator, one fact.
 
-| Dropped in fast mode | Saves | Kept always |
-|---|---|---|
-| the probe render | ~7 min, ~USD 0.65 | the cost cap |
-| the text-overlay stage (see `overlays`) | ~15-25 min | policy_check, lint |
-| 3 music directions -> 1 | ~5 min, ~USD 0.40 | vo_qa |
-| 2 VO takes -> 1 | ~3 min | mix_audio's audibility gate |
-| occlusion + style card | ~7 min | the one-FINAL delivery contract |
-| browsing beyond the listing page | ~5 min | qa.py on the master |
-
-A film without the overlay stage is still a complete delivery: footage, VO, music,
-mix. `overlays: false` is also available on its own for a full-quality run that
-wants text added later.
-
-**Never invent a third mode**, and never trade away a gate for time. Fast mode
-removes CHOICES and DEPTH — fewer alternates, no insurance render, no text layer.
-It does not remove a single check on what it does deliver.
+What stays, and why, so nobody re-cuts it for speed:
+- **The probe.** ~6 minutes of insurance on a ~USD 9 master. It fired on both recent
+  runs (a mood band 20 points low; a hero interior rendering as an abstract blur).
+  Cutting it does not save 6 minutes, it risks a re-render that costs 16 and USD 9.
+- **Every QA gate.** They are seconds each and each one caught something real.
+- **Audio candidates**, because they are now fired as ONE parallel batch
+  (genrupt-flow 5a-quater): three directions cost the same wall clock as one.
 
 ## The money contract
 
@@ -110,7 +103,8 @@ The rule:
    spending you did not do, and it can hide a job that did not run.
 3. **Audio is cheap: ~2 credits (~USD 0.12) per 30s track** (measured live).
    Count the tracks you fire and add them to the running total. Because it is
-   this cheap, generating 2-3 music candidates and 2 VO takes to pick the best
+   this cheap, generating 2-3 music candidates and 2 VO takes IN ONE PARALLEL BATCH
+   (genrupt-flow 5a-quater, same wall clock as one) to pick the best
    is the right call — the taste gate stays.
 4. A content-filter refusal on audio costs nothing, same as on video.
 
@@ -118,9 +112,13 @@ The rule:
 
 Stage-by-stage detail lives in `references/` (see the map below). The shape:
 
-1. **Research** — scrape the ASIN through Genrupt (`scrape_video_reference_images_from_asin`
-   + listing data). OPEN the product images and look; titles lie. Read reviews for
-   emotional vs functional language. **Write `listing.json` into the run** (title,
+1. **Research — the listing page ONLY, one pass.** Scrape the ASIN through Genrupt
+   (`scrape_video_reference_images_from_asin` + listing data). OPEN the product images
+   and look; titles lie. Read the reviews that come back with the listing for emotional
+   vs functional language. **Do not browse further**: no competitor pages, no brand
+   site, no search. Measured 19.8: wider browsing cost ~5 minutes a run and never
+   changed the film's argument, which comes from the seller's own title, bullets,
+   gallery and reviews. **Write `listing.json` into the run** (title,
    bullets, description, image URLs): the lint checks the brief against the seller's
    own words, and cannot if the run does not keep them. Then answer **taste.md §0**
    before anything else — occasion, symbols, provenance, packaging. An outside
@@ -146,7 +144,7 @@ Stage-by-stage detail lives in `references/` (see the map below). The shape:
 5. **References prep** — `scripts/prep_refs.py`: screen for real people, crop
    marketing text, pad to legal aspect ratio BEFORE upload (a failed download bills;
    a filter refusal is free).
-6. **Probe** (SKIPPED when `fast_mode: true`) — 4s/480p of the signature shot with
+6. **Probe** — 4s/480p of the signature shot with
    real references. QA the probe:
    product fidelity, luminance vs the declared mood band. **Every probe finding must
    become a change in the master prompt before the master runs, not a note.** Measured:
@@ -193,7 +191,7 @@ Stage-by-stage detail lives in `references/` (see the map below). The shape:
     words.json`, which owns the model lookup and the file shape) and verified against
     their beats; the mix keeps SFX forward (they are the realism layer), music
     ducked under, VO on top. Never ship the only candidate unheard.
-11. **Overlays — the theme kit** (SKIPPED when `fast_mode` or `overlays: false`) (`references/overlay-grammar.md`). Pick ONE theme
+11. **Overlays — the theme kit** (ALWAYS runs; at most 3 supers) (`references/overlay-grammar.md`). Pick ONE theme
     from `overlays/themes/` (five registers incl. condensed-editorial), lock its
     palette from the product's own label (`scripts/theme_extract.py`) and **cap
     the ink to the plate's highlight** (`scripts/integrate.py measure`).
@@ -207,14 +205,15 @@ Stage-by-stage detail lives in `references/` (see the map below). The shape:
     fonts, and QA with `scripts/overlay_qa.py` (theme lock, contrast, STILL-time
     reading, cut adjacency, lead-biased VO sync, breath, hierarchy, anchor-group
     distribution) — FAIL blocks the composite. LOOK at `qa/overlay-boxes/`:
-    a box on a face/product/label is a reposition, EXCEPT the one occluded
-    hero super, where the subject wins by construction. After the composite:
-    **one occlusion moment**, skipped in `fast_mode` (`scripts/occlude.py`, which REFUSES and deletes
-    its output if the subject hides more than ~35% of the glyphs — measured: a
-    hero line reached the customer as "ur, / a ill") and **matched grain**
-    (`integrate.py grain`). Sizes meet Amazon's 50pt/720p floor. **Brand
+    a box on a face, the product or a label is a REPOSITION, always. There is no
+    occlusion escape hatch any more: `scripts/occlude.py` still ships for a
+    deliberate one-off, but the pipeline does not call it, because it cost ~5
+    minutes, needs a segmentation engine that is not in every environment, and
+    once hid 63% of a hero line ("ur, / a ill" reached a customer). Type that sits
+    in measured dead space does not need rescuing. After the composite: **matched
+    grain** (`integrate.py grain`). Sizes meet Amazon's 50pt/720p floor. **Brand
     marks: real or absent** (taste.md §4b).
-12. **THE AUDIO TASTE GATE** (`fast_mode`: one music direction, one VO take).
+12. **THE AUDIO TASTE GATE.**
     Audio is the one layer meters cannot judge: every
     measured number can pass while the track sounds cheap, choppy or wrong for
     the picture (it happened; it failed review twice). So audio gets what
@@ -230,7 +229,7 @@ Stage-by-stage detail lives in `references/` (see the map below). The shape:
     choppy voice is worse than a half-beat drift.
 13. **Conform + report** — 1280x720, 24fps, final mute-watch pass. Write the run
     report (`scripts/report.py`): every decision, measurement, and dollar, with
-    the final film, the audio alternates and the style card embedded as players.
+    the final film and the audio alternate embedded as players.
 
     **THE DELIVERY LAYOUT — one file is the answer.** The person asked for a
     video, and a folder where the finished film hides among mixes and takes is
@@ -240,7 +239,7 @@ Stage-by-stage detail lives in `references/` (see the map below). The shape:
 
     ```
     out/FINAL-<slug>.mp4     <- the film. The ONLY mp4 at out/ root.
-    out/extras/              <- ALT audio takes, the style card. Optional depth.
+    out/extras/              <- ONE audio alternate. Nothing else.
     out/report.html          <- the receipt, players for FINAL and extras.
     work/                    <- every intermediate: composites, mixes, masks,
                                 probe, trimmed segments. Never shown, safe to
