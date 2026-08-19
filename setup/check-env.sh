@@ -54,6 +54,15 @@ else
   miss "whisper-cli (voiceover timing QA)" "macOS: brew install whisper-cpp | Windows: winget install ggerganov.whisper.cpp (or use WSL) | Linux: build whisper.cpp | then the model: curl -L -o ~/.cache/whisper/ggml-base.en.bin --create-dirs https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.en.bin"
 fi
 
+# 4b. A person segmenter — ONLY for the optional occlusion flourish
+if python3 -c "import Vision, Quartz" >/dev/null 2>&1; then
+  ok "person segmentation (macOS Vision)"
+elif python3 -c "import rembg" >/dev/null 2>&1; then
+  ok "person segmentation (rembg)"
+else
+  warn "no person segmenter" "only for the optional occlusion moment, where the subject passes in front of a super. Films are complete without it. Any platform: python3 -m pip install rembg onnxruntime | macOS also: python3 -m pip install pyobjc-framework-Vision"
+fi
+
 # 5. Genrupt MCP — checked at run time from inside the agent, not from bash.
 warn "Genrupt MCP connection + credits" "verified on every run via get_credit_balance_and_costs; connect Genrupt in your MCP settings before the first run"
 

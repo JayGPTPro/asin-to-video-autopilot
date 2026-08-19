@@ -98,6 +98,24 @@ def main():
             engine = "vision"
         except ImportError:
             engine = "rembg"
+    # Neither segmenter ships with the skill, and the failure used to be a bare
+    # ModuleNotFoundError arriving AFTER the master render was paid for. Say what
+    # to install, and say that skipping is a legitimate answer: occlusion is one
+    # optional flourish, not a stage the film depends on.
+    try:
+        if engine == "vision":
+            import Vision, Quartz  # noqa
+        else:
+            import rembg  # noqa
+    except ImportError:
+        print(f"the '{engine}' segmentation engine is not installed.\n"
+              f"  any platform:  python3 -m pip install rembg onnxruntime\n"
+              f"  macOS only:    python3 -m pip install pyobjc-framework-Vision "
+              f"(faster, no model download)\n"
+              f"Or skip the occlusion moment entirely — the film is complete "
+              f"without it, and a super that needs occlusion to be legible was "
+              f"placed wrong in the first place (overlay-grammar, dead space).")
+        sys.exit(3)
     print(f"engine: {engine}  window: {a.t0:.2f}-{a.t1:.2f}s")
 
     # snap the window to the frame grid and count in FRAMES, never seconds —
